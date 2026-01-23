@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Problem Details</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/problem.css" />
+
+    <!-- Supabase SDK -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+</head>
+
+<body>
+
+    <div class="problem-container">
+
+        <img id="problemImage" class="problem-image" alt="Problem image" hidden />
+
+        <h1 id="problemTitle"></h1>
+
+        <div class="meta">
+            <span id="status"></span>
+            <span id="locality"></span>
+        </div>
+
+        <p id="description"></p>
+
+        <div class="details">
+            <p id="cost"></p>
+            <p id="advancedAmount"></p>
+            <p id="totalAmount"></p>
+            <p id="voteCount"></p>
+            <p id="startDate"></p>
+            <p id="endDate"></p>
+        </div>
+
+        <p id="remarks" class="remarks"></p>
+        <div id="votingSection" hidden>
+            <input type="number" id="voteCount" placeholder="Enter votes" min="1" />
+
+            <button id="voteBtn" class="vote-btn" hidden>Vote</button>
+            <p id="myVotes"></p>
+            <p id="totalVotes"></p>
+            <div id="completionVoting" hidden>
+                <button id="yesBtn">Yes, Solved</button>
+                <button id="noBtn">No, Not Solved</button>
+            </div>
+
+
+        </div>
+
+        <!-- JS -->
+        <script type="module" src="../js/problem.js"></script>
+</body>
+
+</html>

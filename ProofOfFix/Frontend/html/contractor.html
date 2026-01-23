@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Contractor Dashboard</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/contractor.css" />
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <h1>Contractor Dashboard</h1>
+    <div class="topbar-meta">
+      <span id="localityBadge">Locality</span>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section class="stats">
+    <div class="stat">
+      <p>Total Issues</p>
+      <h3 id="statTotal">0</h3>
+    </div>
+    <div class="stat">
+      <p>In Progress</p>
+      <h3 id="statProgress">0</h3>
+    </div>
+    <div class="stat">
+      <p>Completed</p>
+      <h3 id="statCompleted">0</h3>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="content">
+    <h2>Assigned Problems</h2>
+
+    <!-- IMPORTANT: ID UNCHANGED -->
+    <div id="problemsContainer"></div>
+  </main>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module" src="../js/supabaseClient.js"></script>
+  <script type="module" src="../js/contractorMain.js"></script>
+</body>
+
+</html>
