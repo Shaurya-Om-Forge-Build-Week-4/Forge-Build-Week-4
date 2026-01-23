@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+    <script src="../js//supabaseClient.js" defer></script>
+    <script src="../js/home.js" defer></script>
+</head>
+
+<body>
+
+    <body>
+        <div class="signup-container">
+            <h2>Home</h2>
+
+            <p id="user-info">Loading...</p>
+
+            <!-- Contractor Dashboard Button -->
+            <button id="contractor-btn" style="display:none; margin-bottom: 20px;">
+                Go to Contractor Dashboard
+            </button>
+
+            <!-- Cards Container -->
+            <div id="cards-container" style="
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+      "></div>
+
+            <br />
+            <button id="logout">Logout</button>
+        </div>
+    </body>
+
+</body>
+
+</html>
