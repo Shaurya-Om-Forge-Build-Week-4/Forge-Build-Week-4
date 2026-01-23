@@ -1,87 +1,91 @@
+import { getContracts } from "../js/blockchain.js";
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@6.8.1/dist/ethers.min.js";
+
+
+
 console.log("signup.js loaded");
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    throw new Error("MetaMask is required");
+  }
+  
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  return provider.getSigner();
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   const supabase = window.supabaseClient;
-
+  
   const form = document.getElementById("signup-form");
   const message = document.getElementById("message");
-
+  
   form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
     const full_name = document.getElementById("name").value.trim();
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
     const locality = document.getElementById("locality").value;
 
-    // ✅ Validation
     if (!full_name || !email || !password || !locality) {
-      message.textContent = "All fields are required.";
-      message.style.color = "red";
-      return;
+      throw new Error("All fields are required");
     }
 
-    message.textContent = "Submitting...";
-    message.style.color = "black";
+    message.textContent = "Creating account...";
 
-    // 1️⃣ Signup
+    // 1️⃣ Supabase signup
     const { data, error } = await supabase.auth.signUp({
       email,
       password
     });
 
-    if (error) {
-      message.textContent = error.message;
-      message.style.color = "red";
-      return;
-    }
-
+    if (error) throw error;
     const user = data.user;
-    if (!user) {
-      message.textContent = "Signup failed.";
-      message.style.color = "red";
-      return;
-    }
+    if (!user) throw new Error("Signup failed");
 
+    // 2️⃣ Connect wallet
+    message.textContent = "Connecting wallet...";
+    const { voting, signer } = await getContracts();
+    const walletAddress = await signer.getAddress();
+
+    // 3️⃣ REGISTER USER ON-CHAIN  🚨🚨🚨
+    message.textContent = "Registering on blockchain...";
+    const tx = await voting.registerUser(walletAddress, Number(locality));
+    await tx.wait();
+
+    // 4️⃣ Store profile in Supabase
     const userType = document.querySelector(
-  'input[name="user_type"]:checked'
-).value;
+      'input[name="user_type"]:checked'
+    ).value;
 
-// flag1 = contractor
-const Contractor = userType === "contractor";
+    const isContractor = userType === "contractor";
 
-    // 2️⃣ Create profile
     const { error: profileError } = await supabase
       .from("profiles")
       .insert({
         id: user.id,
         full_name,
         locality,
-        credits: 0,
-        isContractor: Contractor, // ✅ contractor = true
-    flag2: false,
-    flag3: false,
-    flag4: false,
-    flag5: false,
-    flag6: false,
-    flag7: false,
-    flag8: false,
-    flag9: false,
-    flag10: false
+        credits: 100,              // mirror blockchain
+        isContractor
       });
 
-    if (profileError) {
-      message.textContent = profileError.message;
-      message.style.color = "red";
-      return;
-    }
+    if (profileError) throw profileError;
 
-    // ✅ Redirect ONLY after successful signup
-    message.textContent = "Signup successful! Redirecting...";
+    message.textContent = "Signup successful!";
     message.style.color = "green";
 
     setTimeout(() => {
       window.location.href = "../html/index.html";
     }, 1000);
-  });
+
+  } catch (err) {
+    console.error(err);
+    message.textContent = err.message || "Signup failed";
+    message.style.color = "red";
+  }
+});
 });
