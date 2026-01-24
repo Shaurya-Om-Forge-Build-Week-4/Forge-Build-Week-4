@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   .from("problems")
   .select("*")
   .eq("locality", profile.locality)
+  .eq("status_code", 2)
   .order("status_code");
   
   if (!problems || problems.length === 0) {
@@ -58,7 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     card.innerHTML = `
       <h3>${p.title}</h3>
-      ${p.assigned ? `<p><strong>Advance Paid:</strong> ₹${p.advance_paid}</p>` : ""}
       <img src="${p.image_url || "https://via.placeholder.com/300x150"}" />
       <p>${p.assigned ? `<p><strong>Advance Paid:</strong> ₹${p.advance_paid}</p>` : ""}</p>
       <p><strong>Status:</strong> ${p.status}</p>
