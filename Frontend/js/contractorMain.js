@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const { data: problems, error: problemsError } = await supabase
       .from("problems")
       .select("*")
-      .eq("locality", locality);
+      .eq("locality", locality)
+      .order("status_code");
 
     if (problemsError) {
       console.error("Problems fetch error:", problemsError);
@@ -67,8 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       card.dataset.status = problem.status;
 
       card.innerHTML = `
-        <p><strong>ID:</strong> ${problem.id}</p>
-        <p><strong>Status:</strong> ${statusText(problem.status)}</p>
+        <p><strong>Title:</strong> ${problem.title}</p>
+        <p><strong>Status:</strong> ${problem.status}</p>
 
         ${problem.start_date ? `<p><strong>Start:</strong> ${problem.start_date}</p>` : ""}
         ${problem.end_date ? `<p><strong>End:</strong> ${problem.end_date}</p>` : ""}
@@ -80,11 +81,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           placeholder="Add remark..."
           ${problem.status_code === 3 ? "disabled" : ""}>${problem.remark || ""}</textarea>
 
-        <button class="save-btn" ${problem.status_code === 3 ? "disabled" : ""}>
+        <button class="save-btn" >
           Save Remark
         </button>
+        </button>
 
-        <button class="complete-btn" ${problem.status_code === 3 ? "disabled" : ""}>
+        <button class="complete-btn" >
           Mark Completed
         </button>
       `;

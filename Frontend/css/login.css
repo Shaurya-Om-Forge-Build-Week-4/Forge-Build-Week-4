@@ -22,6 +22,7 @@ body {
   width: 920px;
   height: 540px;
   position: relative;
+  align-items: center;
 
   background: #ffffff;
   border-radius: 24px;
@@ -79,6 +80,16 @@ input::placeholder {
 input:focus {
   border-color: #637efe;
   box-shadow: 0 0 0 3px rgba(99, 126, 254, 0.15);
+}
+
+.sign-up-link {
+    color: black;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.sign-up-link:hover {
+    color: gray;
 }
 
 /* ================================
