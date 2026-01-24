@@ -1,5 +1,4 @@
-import { getContracts } from "./blockchain.js";
-
+import { getVotingContract } from "./blockchain.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
@@ -12,7 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const {
       data: { session },
-      error: sessionError
+      error: sessionError,
     } = await supabase.auth.getSession();
 
     if (sessionError || !session) {
@@ -61,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     container.innerHTML = "";
 
-    problems.forEach(problem => {
+    problems.forEach((problem) => {
       const card = document.createElement("div");
       card.className = "problem-card";
       card.dataset.problemId = problem.id;
@@ -145,25 +144,31 @@ document.addEventListener("DOMContentLoaded", async () => {
           location.reload();
         }
 
-         const { voting } = await getContracts();
+        const { voting } = await getVotingContract();
 
-  try {
-    // 🔗 BLOCKCHAIN
-    await voting.moveToCompletionVoting(problemId);
+        try {
+          // 🔗 BLOCKCHAIN
+          await voting.moveToCompletionVoting(problemId);
 
-
-    alert("Problem moved to completion voting");
-    location.reload();
-  } catch (err) {
-    console.error(err);
-    alert("Blockchain transaction failed");
-  }
+          alert("Problem moved to completion voting");
+          location.reload();
+        } catch (err) {
+          console.error(err);
+          alert("Blockchain transaction failed");
+        }
       }
     });
-
   } catch (err) {
     console.error("Contractor dashboard error:", err);
   }
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await supabase.auth.signOut();
+
+    setTimeout(() => {
+      window.location.href = "../html/login.html";
+    }, 100);
+  });
 });
 
 /* =========================
