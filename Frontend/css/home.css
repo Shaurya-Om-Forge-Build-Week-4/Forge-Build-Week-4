@@ -1,294 +1,990 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@700;800;900&display=swap");
+/* ================================================================================
+   CIVIC ACCOUNTABILITY DASHBOARD - PREMIUM CSS
+   Streamlined with Reduced Animations, Full Hover Effects & Shadows Preserved
+   Blue-Grey-White Contrasting Theme
+   ================================================================================ */
 
-/* =========================
-   BASE / CANVAS
-========================= */
+/* ================================================================================
+   SECTION 1: FONT IMPORTS
+   ================================================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+/* ================================================================================
+   SECTION 2: RESET & BASE
+   ================================================================================ */
+
 *,
 *::before,
 *::after {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
-  padding: 50px 60px 80px;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
   font-family:
     "Inter",
-    system-ui,
     -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
     sans-serif;
-  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-  color: #1e293b;
+  line-height: 1.7;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ================================================================================
+   SECTION 3: CSS VARIABLES
+   ================================================================================ */
+
+:root {
+  /* Blue Scale */
+  --blue-50: #e3f2fd;
+  --blue-100: #bbdefb;
+  --blue-200: #90caf9;
+  --blue-300: #64b5f6;
+  --blue-400: #42a5f5;
+  --blue-500: #2196f3;
+  --blue-600: #1e88e5;
+  --blue-700: #1976d2;
+  --blue-800: #1565c0;
+  --blue-900: #0d47a1;
+
+  /* Grey Scale */
+  --grey-50: #fafafa;
+  --grey-100: #f5f5f5;
+  --grey-200: #eeeeee;
+  --grey-300: #e0e0e0;
+  --grey-400: #bdbdbd;
+  --grey-500: #9e9e9e;
+  --grey-600: #757575;
+  --grey-700: #616161;
+  --grey-800: #424242;
+  --grey-900: #212121;
+
+  /* Colors */
+  --white: #ffffff;
+  --primary: #1976d2;
+  --primary-dark: #1565c0;
+  --secondary: #64b5f6;
+  --accent: #42a5f5;
+
+  /* Status Colors */
+  --success: #4caf50;
+  --danger: #ef5350;
+  --warning: #ff9800;
+  --info: #2196f3;
+
+  /* Backgrounds */
+  --bg-primary: #c5d3e0;
+  --bg-secondary: #e8eef4;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fbff;
+
+  /* Text Colors */
+  --text-primary: #2c3e50;
+  --text-secondary: #34495e;
+  --text-tertiary: #5a6c7d;
+  --text-muted: #95a5a6;
+  --text-white: #ffffff;
+  --text-blue: #1976d2;
+
+  /* Borders */
+  --border-light: #d1dbea;
+  --border-medium: #a8bcd4;
+  --border-blue: #2196f3;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+  --gradient-secondary: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+  --gradient-accent: linear-gradient(135deg, #64b5f6 0%, #2196f3 100%);
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px 0 rgba(25, 118, 210, 0.08);
+  --shadow-md: 0 4px 8px 0 rgba(25, 118, 210, 0.12);
+  --shadow-lg: 0 8px 16px 0 rgba(25, 118, 210, 0.16);
+  --shadow-xl: 0 12px 24px 0 rgba(25, 118, 210, 0.2);
+  --shadow-2xl: 0 16px 32px 0 rgba(25, 118, 210, 0.24);
+  --shadow-blue: 0 8px 32px rgba(33, 150, 243, 0.3);
+  --shadow-hover: 0 12px 40px rgba(33, 150, 243, 0.35);
+
+  /* Glows */
+  --glow-blue: 0 0 20px rgba(33, 150, 243, 0.4);
+  --glow-blue-soft: 0 0 15px rgba(33, 150, 243, 0.3);
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-Index */
+  --z-base: 1;
+  --z-sticky: 1020;
+  --z-modal: 1050;
+}
+
+/* ================================================================================
+   SECTION 4: BODY & BACKGROUND
+   ================================================================================ */
+
+body {
+  font-family: "Inter", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  background-image:
+    radial-gradient(
+      circle at 10% 20%,
+      rgba(33, 150, 243, 0.06) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      rgba(25, 118, 210, 0.05) 0%,
+      transparent 40%
+    );
+  background-attachment: fixed;
+  position: relative;
   min-height: 100vh;
 }
 
-/* =========================
-   PAGE TITLE - ENLARGED & COOLER FONT
-========================= */
+/* ================================================================================
+   SECTION 5: TYPOGRAPHY
+   ================================================================================ */
+
 h1,
-.signup-container h2 {
-  max-width: 1400px;
-  margin: 0 auto 40px;
-  font-family: "Poppins", "Inter", sans-serif;
-  font-size: 64px;
-  font-weight: 900;
-  letter-spacing: -0.03em;
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 0;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+  margin-bottom: var(--space-sm);
 }
 
-/* =========================
-   PROFILE / METRIC CARD - ENLARGED & AESTHETIC
-========================= */
-#user-info {
-  max-width: 1400px;
-  margin: 0 auto 50px;
-  padding: 32px 36px;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 20px;
-  box-shadow:
-    0 20px 60px rgba(30, 64, 175, 0.08),
-    0 8px 20px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
   position: relative;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-}
-
-/* Header label - ANALYTICS OVERVIEW */
-#user-info::before {
-  content: "ANALYTICS OVERVIEW";
-  grid-column: 1 / -1;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: #3b82f6;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-}
-
-/* Field labels (Name, Locality, etc.) */
-#user-info strong {
-  font-size: 15px;
-  font-weight: 600;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  display: block;
-  margin-bottom: 8px;
-}
-
-/* Field values - ENLARGED WITH OVAL BACKGROUNDS */
-#user-info strong + * {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1e293b;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-  padding: 8px 20px;
-  border-radius: 999px;
-  width: fit-content;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
   display: inline-block;
 }
 
-/* Credits KPI - EXTRA LARGE OVAL */
-#user-info strong:nth-of-type(3) + * {
-  font-size: 44px !important;
-  font-weight: 900 !important;
-  color: #1e293b !important;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
-  padding: 12px 28px !important;
-}
-
-/* Role badge - CONSISTENT OVAL */
-#user-info strong:nth-of-type(4) + * {
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
-  color: #1e293b !important;
-  padding: 8px 20px !important;
-  border-radius: 999px !important;
-  width: fit-content !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  text-transform: capitalize;
-  letter-spacing: 0.02em;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
-  display: inline-block !important;
-}
-
-/* Progress bar - MODERN GRADIENT */
-#user-info::after {
+h2::after {
   content: "";
-  grid-column: 1 / -1;
-  height: 8px;
-  border-radius: 999px;
-  background: linear-gradient(to right, #3b82f6 0%, #60a5fa 40%, #e5e7eb 40%);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
-  margin-top: 8px;
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 70px;
+  height: 4px;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
 }
 
-/* =========================
-   PROBLEMS GRID - VERTICAL COLUMN LAYOUT
-========================= */
-#cards-container {
-  max-width: 1400px;
-  margin: 0 auto;
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+p {
+  margin: 0 0 var(--space-md) 0;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ================================================================================
+   SECTION 6: HEADER
+   ================================================================================ */
+
+.app-header {
+  position: relative;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2xl) var(--space-xl);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-lg);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.app-header::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  box-shadow: var(--glow-blue-soft);
+}
+
+.header-left {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--space-xs);
 }
 
-/* Empty state */
-#cards-container:empty::before {
-  content: "No problems reported yet";
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 20px;
-  padding: 60px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: #94a3b8;
-  box-shadow:
-    0 20px 60px rgba(30, 64, 175, 0.08),
-    0 8px 20px rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+.header-left h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+  text-transform: capitalize;
 }
 
-/* =========================
-   PROBLEM CARDS - VERTICAL STACKED LAYOUT
-========================= */
-#cards-container > div {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border-radius: 20px;
-  box-shadow:
-    0 10px 40px rgba(30, 64, 175, 0.06),
-    0 4px 12px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(148, 163, 184, 0.08);
-  display: block !important;
-  width: 100%;
+.header-left p {
+  font-family: "Inter", sans-serif;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  margin: 0;
 }
 
-#cards-container > div:hover {
-  transform: translateY(-8px);
-  box-shadow:
-    0 20px 60px rgba(30, 64, 175, 0.12),
-    0 8px 24px rgba(0, 0, 0, 0.08);
-  border-color: rgba(59, 130, 246, 0.2);
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
-/* Card image - TOP OF CARD */
-#cards-container img {
-  width: 100% !important;
-  height: 280px !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-/* Card content area */
-#cards-container > div > div {
-  padding: 28px 32px !important;
-  display: block !important;
-}
-
-/* Card title - ENLARGED */
-#cards-container h4 {
-  margin: 0 0 12px !important;
-  font-size: 28px !important;
-  font-weight: 800 !important;
-  color: #1e293b !important;
-  letter-spacing: -0.02em !important;
-  line-height: 1.3 !important;
-}
-
-/* Card description - ENLARGED & BETTER SPACING */
-#cards-container p {
-  margin: 0 0 20px !important;
-  font-size: 17px !important;
-  color: #64748b !important;
-  line-height: 1.7 !important;
-}
-
-/* Status pill - ENHANCED WITH GRADIENTS */
-#cards-container button {
-  border: none !important;
-  border-radius: 999px !important;
-  padding: 10px 20px !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
-  text-transform: uppercase !important;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-  color: #ffffff !important;
-  cursor: pointer !important;
-  transition: all 0.2s ease !important;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25) !important;
-  width: fit-content !important;
-  display: inline-block !important;
-}
-
-#cards-container button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35) !important;
-}
-
-/* =========================
-   LOGOUT BUTTON - TOP RIGHT (BLUE)
-========================= */
-#logout {
-  position: fixed;
-  top: 42px;
-  right: 60px;
-  z-index: 100;
+/* Logout Button */
+.logout-btn {
+  position: relative;
   padding: 14px 36px;
-  font-size: 15px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  color: #ffffff;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-radius: 999px;
+  color: var(--text-white);
+  background: var(--gradient-primary);
   border: none;
+  border-radius: var(--radius-xl);
   cursor: pointer;
-  box-shadow:
-    0 8px 24px rgba(59, 130, 246, 0.3),
-    0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md), var(--glow-blue-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  overflow: hidden;
+  z-index: 1;
 }
 
-#logout:hover {
+.logout-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+  z-index: -1;
+}
+
+.logout-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: var(--shadow-hover), var(--glow-blue);
+}
+
+.logout-btn:hover::before {
+  width: 350px;
+  height: 350px;
+}
+
+.logout-btn:active {
+  transform: translateY(-1px) scale(1);
+  box-shadow: var(--shadow-md), var(--glow-blue-soft);
+}
+
+.logout-btn:focus-visible {
+  outline: 3px solid rgba(33, 150, 243, 0.5);
+  outline-offset: 4px;
+}
+
+/* ================================================================================
+   SECTION 7: MAIN CONTAINER
+   ================================================================================ */
+
+.main-container {
+  position: relative;
+  z-index: var(--z-base);
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-xl);
+}
+
+/* ================================================================================
+   SECTION 8: USER CARD
+   ================================================================================ */
+
+.user-card {
+  position: relative;
+  padding: var(--space-2xl);
+  margin-bottom: var(--space-2xl);
+  background: var(--bg-card);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: all var(--transition-slow);
+}
+
+.user-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--gradient-accent);
+  box-shadow: var(--glow-blue);
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2xl), var(--glow-blue-soft);
+  border-color: var(--border-blue);
+}
+
+#user-info {
+  position: relative;
+  z-index: 1;
+  font-family: "Inter", sans-serif;
+  font-size: 1.125rem;
+  line-height: 2;
+  color: var(--text-secondary);
+}
+
+#user-info strong {
+  display: inline-block;
+  min-width: 120px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: var(--space-sm);
+}
+
+#user-info br {
+  display: block;
+  margin: var(--space-sm) 0;
+}
+
+/* Contractor Button */
+.contractor-btn {
+  position: relative;
+  margin-top: var(--space-xl);
+  padding: 16px 40px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-white);
+  background: var(--gradient-secondary);
+  border: none;
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.contractor-btn::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.7s,
+    height 0.7s;
+  z-index: -1;
+}
+
+.contractor-btn:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: var(--shadow-hover), var(--glow-blue);
+}
+
+.contractor-btn:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.contractor-btn:active {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ================================================================================
+   SECTION 9: PROBLEMS SECTION
+   ================================================================================ */
+
+.problems-section {
+  position: relative;
+}
+
+.problems-section h2 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2xl);
+  padding-left: var(--space-md);
+  position: relative;
+}
+
+.problems-section h2::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 75%;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  box-shadow: var(--glow-blue);
+}
+
+.problems-section h2::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: var(--space-md);
+  width: 80px;
+  height: 5px;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-full);
+  box-shadow: var(--glow-blue-soft);
+}
+
+/* ================================================================================
+   SECTION 10: CARDS GRID
+   ================================================================================ */
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: var(--space-2xl);
+  padding: var(--space-md) 0;
+}
+
+/* ================================================================================
+   SECTION 11: PROBLEM CARD
+   ================================================================================ */
+
+.problem-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--border-light);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-slow);
+}
+
+.problem-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-slow);
+  z-index: 2;
+}
+
+.problem-card:hover::before {
+  transform: scaleX(1);
+}
+
+.problem-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: var(--shadow-2xl), var(--glow-blue);
+  border-color: var(--border-blue);
+}
+
+/* ================================================================================
+   SECTION 12: CARD IMAGE
+   ================================================================================ */
+
+.problem-card img {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  transition: all var(--transition-slow);
+  z-index: 1;
+}
+
+.problem-card:hover img {
+  transform: scale(1.08);
+  filter: brightness(1.05) saturate(1.1);
+}
+
+/* ================================================================================
+   SECTION 13: CARD BODY
+   ================================================================================ */
+
+.card-body {
+  position: relative;
+  padding: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  flex: 1;
+  z-index: 1;
+  background: var(--bg-card);
+}
+
+.card-body h4 {
+  font-family: "Poppins", sans-serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+  transition: color var(--transition-base);
+  letter-spacing: -0.02em;
+}
+
+.problem-card:hover .card-body h4 {
+  color: var(--primary);
+}
+
+.card-body p {
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin: 0;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ================================================================================
+   SECTION 14: STATUS BADGE
+   ================================================================================ */
+
+.status-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 10px 22px;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-white);
+  background: var(--gradient-secondary);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+
+.problem-card:hover .status-badge {
   transform: translateY(-2px);
-  box-shadow:
-    0 12px 32px rgba(59, 130, 246, 0.4),
-    0 6px 12px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  box-shadow: var(--shadow-md);
 }
 
-/* =========================
-   RESPONSIVE ADJUSTMENTS
-========================= */
-@media (max-width: 1024px) {
-  #user-info {
-    grid-template-columns: repeat(2, 1fr);
+/* Status Variations */
+.status-badge[data-status="Initial Voting"],
+.status-badge[data-status="initial-voting"] {
+  background: linear-gradient(135deg, #64b5f6 0%, #42a5f5 100%);
+  box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+}
+
+.status-badge[data-status="Approved"],
+.status-badge[data-status="approved"] {
+  background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+}
+
+.status-badge[data-status="In Progress"],
+.status-badge[data-status="in-progress"] {
+  background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+  box-shadow: 0 4px 12px rgba(251, 140, 0, 0.3);
+}
+
+.status-badge[data-status="Completed"],
+.status-badge[data-status="completed"] {
+  background: linear-gradient(135deg, #9ccc65 0%, #7cb342 100%);
+  box-shadow: 0 4px 12px rgba(124, 179, 66, 0.3);
+}
+
+.status-badge[data-status="Rejected"],
+.status-badge[data-status="rejected"] {
+  background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.3);
+}
+
+.status-badge[data-status="Pending"],
+.status-badge[data-status="pending"] {
+  background: linear-gradient(135deg, #ffca28 0%, #ffb300 100%);
+  box-shadow: 0 4px 12px rgba(255, 179, 0, 0.3);
+}
+
+/* ================================================================================
+   SECTION 15: LOADING & EMPTY STATES
+   ================================================================================ */
+
+.loading-text {
+  text-align: center;
+  padding: var(--space-3xl) var(--space-xl);
+  font-family: "Poppins", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-xl);
+  text-align: center;
+}
+
+.empty-state-title {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.empty-state-description {
+  font-family: "Inter", sans-serif;
+  font-size: 1.125rem;
+  color: var(--text-tertiary);
+  max-width: 500px;
+  line-height: 1.8;
+}
+
+/* ================================================================================
+   SECTION 16: UTILITY CLASSES
+   ================================================================================ */
+
+.d-none {
+  display: none !important;
+}
+.d-block {
+  display: block !important;
+}
+.d-flex {
+  display: flex !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+.mt-md {
+  margin-top: var(--space-md) !important;
+}
+.mb-md {
+  margin-bottom: var(--space-md) !important;
+}
+.mx-auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.p-0 {
+  padding: 0 !important;
+}
+.p-md {
+  padding: var(--space-md) !important;
+}
+.p-lg {
+  padding: var(--space-lg) !important;
+}
+
+/* ================================================================================
+   SECTION 17: RESPONSIVE DESIGN
+   ================================================================================ */
+
+/* Tablet - 1024px and below */
+@media (max-width: 1023px) {
+  .app-header {
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .main-container {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .problem-card img {
+    height: 240px;
   }
 }
 
-@media (max-width: 640px) {
-  h1,
-  .signup-container h2 {
-    font-size: 40px;
+/* Mobile - 767px and below */
+@media (max-width: 767px) {
+  :root {
+    font-size: 14px;
   }
 
-  #user-info {
+  .app-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .header-right {
+    width: 100%;
+  }
+
+  .logout-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .main-container {
+    padding: var(--space-md);
+  }
+
+  .user-card {
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .problems-section h2 {
+    margin-bottom: var(--space-xl);
+  }
+
+  .cards-grid {
     grid-template-columns: 1fr;
-    padding: 24px;
+    gap: var(--space-lg);
   }
 
-  #cards-container h4 {
-    font-size: 22px !important;
+  .problem-card img {
+    height: 220px;
+  }
+
+  .card-body {
+    padding: var(--space-lg);
   }
 }
+
+/* Small Mobile - 480px and below */
+@media (max-width: 479px) {
+  :root {
+    font-size: 13px;
+  }
+
+  .app-header {
+    padding: var(--space-md);
+  }
+
+  .user-card {
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+  }
+
+  #user-info strong {
+    display: block;
+    margin-bottom: var(--space-xs);
+  }
+
+  .problem-card {
+    border-radius: var(--radius-lg);
+  }
+
+  .problem-card img {
+    height: 200px;
+  }
+
+  .card-body {
+    padding: var(--space-md);
+  }
+
+  .status-badge {
+    padding: 8px 18px;
+    font-size: 0.75rem;
+  }
+}
+
+/* ================================================================================
+   SECTION 18: ACCESSIBILITY
+   ================================================================================ */
+
+*:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================================================================
+   SECTION 19: SCROLLBAR
+   ================================================================================ */
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient-secondary);
+}
+
+/* ================================================================================
+   SECTION 20: TEXT SELECTION
+   ================================================================================ */
+
+::selection {
+  background: rgba(33, 150, 243, 0.3);
+  color: var(--text-primary);
+}
+
+::-moz-selection {
+  background: rgba(33, 150, 243, 0.3);
+  color: var(--text-primary);
+}
+
+/* ================================================================================
+   END OF CSS - STREAMLINED TO ~1000 LINES
+   ================================================================================ */
