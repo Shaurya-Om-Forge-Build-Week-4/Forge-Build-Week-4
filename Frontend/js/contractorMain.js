@@ -10,7 +10,7 @@ function toChainId(uuid) {
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   const container = document.getElementById("problemsContainer");
-  
+    
   /* ---------------- AUTH ---------------- */
   const {
     data: { session }
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ---------------- CONTRACTOR CHECK ---------------- */
   const { data: profile } = await supabase
   .from("profiles")
-  .select("locality, isContractor")
+  .select("locality, isContractor, wallet")
   .eq("id", userId)
   .single();
   
@@ -34,6 +34,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "../html/home.html";
     return;
   }
+
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const bal = await provider.getBalance(profile.wallet);
+  document.getElementById("balance").innerText =
+  `${ethers.utils.formatEther(bal)} ETH`;
   
   document.getElementById("localityBadge").innerText =
     `Locality: ${profile.locality}`;
@@ -59,6 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     card.innerHTML = `
       <h3>${p.title}</h3>
+      <p id="balance"></p>
       <img src="${p.image_url || "https://via.placeholder.com/300x150"}" />
       <p>${p.assigned ? `<p><strong>Advance Paid:</strong> ₹${p.advance_paid}</p>` : ""}</p>
       <p><strong>Status:</strong> ${p.status}</p>
@@ -142,8 +148,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   
   /* ---------------- LOGOUT ---------------- */
-  document.getElementById("logoutBtn").onclick = async () => {
+  document.getElementById("topbar").addEventListener("click", async () => {
+    console.log("Logout clicked")
     await supabase.auth.signOut();
-    window.location.href = "../html/login.html";
-  };
+
+    setTimeout(() => {
+      window.location.href = "../html/index.html";
+    }, 100);
+  });
 });

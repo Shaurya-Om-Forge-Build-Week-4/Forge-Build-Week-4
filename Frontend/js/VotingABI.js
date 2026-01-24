@@ -1,26 +1,75 @@
 export default[
 	{
-		"inputs": [],
-		"name": "INITIAL_CREDITS",
-		"outputs": [
+		"inputs": [
 			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
+				"internalType": "bytes32",
+				"name": "id",
+				"type": "bytes32"
 			}
 		],
-		"stateMutability": "view",
+		"name": "closeCompletionVoting",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
 		"inputs": [
 			{
 				"internalType": "bytes32",
-				"name": "problemId",
+				"name": "id",
 				"type": "bytes32"
 			}
 		],
-		"name": "closeCompletionVoting",
+		"name": "moveToUnderProgress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "id",
+				"type": "bytes32"
+			}
+		],
+		"name": "startCompletionVoting",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "id",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "uint256",
+				"name": "votes",
+				"type": "uint256"
+			}
+		],
+		"name": "vote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "id",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bool",
+				"name": "solved",
+				"type": "bool"
+			}
+		],
+		"name": "voteCompletion",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -72,7 +121,7 @@ export default[
 		"inputs": [
 			{
 				"internalType": "bytes32",
-				"name": "problemId",
+				"name": "id",
 				"type": "bytes32"
 			}
 		],
@@ -80,12 +129,12 @@ export default[
 		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "yes",
+				"name": "",
 				"type": "uint256"
 			},
 			{
 				"internalType": "uint256",
-				"name": "no",
+				"name": "",
 				"type": "uint256"
 			}
 		],
@@ -96,7 +145,7 @@ export default[
 		"inputs": [
 			{
 				"internalType": "bytes32",
-				"name": "problemId",
+				"name": "id",
 				"type": "bytes32"
 			}
 		],
@@ -115,7 +164,7 @@ export default[
 		"inputs": [
 			{
 				"internalType": "bytes32",
-				"name": "problemId",
+				"name": "id",
 				"type": "bytes32"
 			}
 		],
@@ -155,16 +204,16 @@ export default[
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "INITIAL_CREDITS",
+		"outputs": [
 			{
-				"internalType": "bytes32",
-				"name": "problemId",
-				"type": "bytes32"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "moveToUnderProgress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -209,19 +258,6 @@ export default[
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "problemId",
-				"type": "bytes32"
-			}
-		],
-		"name": "startCompletionVoting",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -241,42 +277,6 @@ export default[
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "problemId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "votes",
-				"type": "uint256"
-			}
-		],
-		"name": "vote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "problemId",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bool",
-				"name": "solved",
-				"type": "bool"
-			}
-		],
-		"name": "voteCompletion",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]
