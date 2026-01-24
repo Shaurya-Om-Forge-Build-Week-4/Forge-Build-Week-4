@@ -70,7 +70,7 @@ body::after {
   border-radius: 12px;
 
   /* Left content + right image space */
-  padding: 48px 45% 48px 48px;
+  padding: 48px 520px 48px 48px;
 
   /* Heavy, premium shadow stack */
   box-shadow:

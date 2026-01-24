@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("myCredits").innerText =
       `Credits Left: ${credits}`;
     
-    if (p.status_code === 2) {
+    if (p.status_code === 3) {
       document.getElementById("completionStats").innerText =
       `Completion Votes → Yes: ${yes} | No: ${no}`;
     }
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   
   /* ---------------- COMPLETION VOTING ---------------- */
-  if (p.status_code === 2) {
+  if (p.status_code === 3) {
     const section = document.getElementById("completionVoting");
     section.hidden = false;
     

@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .from("problems")
         .update({
           status: "Completion Voting",
-          status_code: 2
+          status_code: 3
         })
         .eq("id", id);
         

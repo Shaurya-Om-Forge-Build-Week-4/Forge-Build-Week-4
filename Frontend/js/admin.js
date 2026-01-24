@@ -18,30 +18,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  /* ---------- LOAD PROBLEMS ---------- */
+  /* ---------- LOAD ALL PROBLEMS (ADMIN) ---------- */
   const { data: problems, error } = await supabase
     .from("problems")
     .select("*")
     .order("status_code");
 
-  if (error || !problems) {
+  if (error) {
+    console.error(error);
     container.innerText = "Failed to load problems";
     return;
   }
 
   const voting = await getVotingContract();
+  container.innerHTML = "";
 
   problems.forEach((p) => {
+    const chainId = toChainId(p.id);
+
     const div = document.createElement("div");
     div.className = "problem";
 
-    const chainId = toChainId(p.id);
-
     div.innerHTML = `
       <h3>${p.title}</h3>
-      <p>Status: <strong>${p.status}</strong></p>
+      <p><strong>Locality:</strong> ${p.locality}</p>
+      <p><strong>Status:</strong> ${p.status}</p>
 
-      ${p.status_code === 0 ? `<button data-act="register">Register On-Chain</button>` : ""}
+      ${p.status_code === 0 ? `<button data-act="register">Register & Open Voting</button>` : ""}
       ${p.status_code === 1 ? `<button data-act="closeInitial">Close Initial Voting</button>` : ""}
       ${p.status_code === 3 ? `<button data-act="closeCompletion">Close Completion Voting</button>` : ""}
     `;
@@ -51,7 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!act) return;
 
       try {
-        /* ---------- REGISTER ---------- */
+        /* REGISTER */
         if (act === "register") {
           const tx = await voting.vote(chainId, 1);
           await tx.wait();
@@ -61,11 +64,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             status_code: 1
           }).eq("id", p.id);
 
-          alert("Registered & Initial Voting started");
+          alert("Initial voting opened");
           location.reload();
         }
 
-        /* ---------- CLOSE INITIAL ---------- */
+        /* CLOSE INITIAL */
         if (act === "closeInitial") {
           const tx = await voting.moveToUnderProgress(chainId);
           await tx.wait();
@@ -75,24 +78,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             status_code: 2
           }).eq("id", p.id);
 
-          alert("Initial voting closed");
+          alert("Moved to Under Progress");
           location.reload();
         }
 
-        /* ---------- CLOSE COMPLETION ---------- */
+        /* CLOSE COMPLETION */
         if (act === "closeCompletion") {
           const tx = await voting.closeCompletionVoting(chainId);
           await tx.wait();
 
           const phase = await voting.getPhase(chainId);
 
-          const finalStatus =
-            phase === 3 ? { status: "Completed", status_code: 4 }
-                        : { status: "Failed", status_code: 5 };
+          const final =
+            phase === 3
+              ? { status: "Completed", status_code: 4 }
+              : { status: "Failed", status_code: 5 };
 
-          await supabase.from("problems")
-            .update(finalStatus)
-            .eq("id", p.id);
+          await supabase.from("problems").update(final).eq("id", p.id);
 
           alert("Completion voting closed");
           location.reload();
