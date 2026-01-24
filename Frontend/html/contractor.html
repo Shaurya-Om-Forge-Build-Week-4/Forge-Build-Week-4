@@ -4,16 +4,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>Contractor Dashboard</title>
-
+  
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
-
+  
   <!-- Styles -->
   <link rel="stylesheet" href="../css/contractor.css" />
 </head>
 
 <body>
-
+  
   <!-- TOP BAR -->
   <header class="topbar">
     <h1>Contractor Dashboard</h1>
@@ -22,7 +22,7 @@
       <button id="logoutBtn">Logout</button>
     </div>
   </header>
-
+  
   <!-- STATS -->
   <section class="stats">
     <div class="stat">
@@ -38,15 +38,20 @@
       <h3 id="statCompleted">0</h3>
     </div>
   </section>
-
+  
   <!-- MAIN CONTENT -->
   <main class="content">
     <h2>Assigned Problems</h2>
-
+    
+    <p style="color:#666; margin-bottom:12px;">
+      Mark problems as completed once work is done. Citizens will verify completion.
+    </p>
+    
+    
     <!-- IMPORTANT: ID UNCHANGED -->
     <div id="problemsContainer"></div>
   </main>
-
+  
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script type="module" src="../js/supabaseClient.js"></script>

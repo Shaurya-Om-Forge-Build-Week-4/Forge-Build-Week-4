@@ -15,6 +15,43 @@ export default[
 	{
 		"inputs": [
 			{
+				"internalType": "bytes32",
+				"name": "problemId",
+				"type": "bytes32"
+			}
+		],
+		"name": "closeCompletionVoting",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "completionVoted",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "",
 				"type": "address"
@@ -26,6 +63,49 @@ export default[
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "problemId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getCompletionVotes",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "yes",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "no",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "problemId",
+				"type": "bytes32"
+			}
+		],
+		"name": "getPhase",
+		"outputs": [
+			{
+				"internalType": "enum Voting.Phase",
+				"name": "",
+				"type": "uint8"
 			}
 		],
 		"stateMutability": "view",
@@ -78,6 +158,19 @@ export default[
 		"inputs": [
 			{
 				"internalType": "bytes32",
+				"name": "problemId",
+				"type": "bytes32"
+			}
+		],
+		"name": "moveToUnderProgress",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
 				"name": "",
 				"type": "bytes32"
 			}
@@ -111,6 +204,19 @@ export default[
 			}
 		],
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "problemId",
+				"type": "bytes32"
+			}
+		],
+		"name": "startCompletionVoting",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{

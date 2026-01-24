@@ -3,130 +3,132 @@ import { castVote } from "../js/vote.js";
 import { voteCompletion } from "../js/completionVote.js";
 import { getVotingContract } from "../js/blockchain.js";
 
+function toChainId(uuid) {
+  return ethers.utils.keccak256(
+    ethers.utils.toUtf8Bytes(uuid)
+  );
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   if (!supabase) return;
-
-  // Auth check
-  const {
-    data: { session }
-  } = await supabase.auth.getSession();
+  
+  /* ---------------- AUTH ---------------- */
+  const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
     window.location.href = "../html/login.html";
     return;
   }
-
+  
+  /* ---------------- FETCH PROBLEM ---------------- */
   const params = new URLSearchParams(window.location.search);
   const problemUUID = params.get("problemId");
   if (!problemUUID) return;
-
-  // 🔗 Deterministic on-chain ID
-  const chainProblemId = ethers.utils.keccak256(
-    ethers.utils.toUtf8Bytes(problemUUID)
-  );
-
-  // Fetch problem (off-chain metadata)
+  
+  const chainProblemId = toChainId(problemUUID);
+  
   const { data: p, error } = await supabase
-    .from("problems")
-    .select("*")
-    .eq("id", problemUUID)
-    .single();
-
+  .from("problems")
+  .select("*")
+  .eq("id", problemUUID)
+  .single();
+  
   if (error || !p) {
     console.error(error);
     return;
   }
-
-  // UI — static data
+  
+  /* ---------------- UI STATIC ---------------- */
   document.getElementById("problemTitle").innerText = p.title;
   document.getElementById("description").innerText = p.description;
   document.getElementById("status").innerText = p.status;
   document.getElementById("locality").innerText = p.locality;
   document.getElementById("cost").innerText = `Estimated Cost: ₹${p.cost}`;
   document.getElementById("chainProblemId").innerText = chainProblemId;
-
+  
   if (p.image_url) {
     const img = document.getElementById("problemImage");
     img.src = p.image_url;
     img.hidden = false;
   }
-
-  // 🔗 Blockchain reads
+  
+  /* ---------------- BLOCKCHAIN READS ---------------- */
   const voting = await getVotingContract();
   const userAddress = await voting.signer.getAddress();
-
-  async function refreshChainStats() {
+  
+  async function refreshStats() {
     const totalVotes = await voting.getTotalVotes(chainProblemId);
     const myVotes = await voting.getUserVotes(userAddress, chainProblemId);
-    const myCredits = await voting.credits(userAddress);
-
-    document.getElementById(
-      "chainTotalVotes"
-    ).innerText = `Total Votes (on-chain): ${totalVotes}`;
-
-    document.getElementById(
-      "myVotes"
-    ).innerText = `Your Votes: ${myVotes}`;
-
-    document.getElementById(
-      "myCredits"
-    ).innerText = `Your Credits: ${myCredits}`;
+    let credits = await voting.credits(userAddress);
+    const [yes, no] = await voting.getCompletionVotes(chainProblemId);
+    
+    // UX fix for first-time users
+    if (credits.toString() === "0") {
+      credits = 100;
+    }
+    
+    document.getElementById("chainTotalVotes").innerText =
+      `Total Votes: ${totalVotes}`;
+    
+    document.getElementById("myVotes").innerText =
+      `Your Votes: ${myVotes}`;
+    
+    document.getElementById("myCredits").innerText =
+      `Credits Left: ${credits}`;
+    
+    if (p.status_code === 2) {
+      document.getElementById("completionStats").innerText =
+      `Completion Votes → Yes: ${yes} | No: ${no}`;
+    }
   }
-
-  await refreshChainStats();
-
-  // ---------------- INITIAL VOTING ----------------
-  if (p.status === "Initial Voting") {
-    const votingSection = document.getElementById("votingSection");
-    votingSection.hidden = false;
-
+  
+  await refreshStats();
+  
+  /* ---------------- INITIAL VOTING ---------------- */
+  if (p.status_code === 1) {
+    const section = document.getElementById("votingSection");
+    section.hidden = false;
+    
     const voteInput = document.getElementById("voteInput");
     const costPreview = document.getElementById("voteCostPreview");
-
+    
     voteInput.addEventListener("input", () => {
       const v = Number(voteInput.value);
-      if (v > 0) {
-        costPreview.innerText = `Cost: ${v * v} credits`;
-      } else {
-        costPreview.innerText = "";
-      }
+      costPreview.innerText =
+      v > 0 ? `Cost: ${v * v} credits` : "";
     });
-
+    
     document.getElementById("voteBtn").onclick = async () => {
       const votes = Number(voteInput.value);
-      if (!votes || votes <= 0) {
-        alert("Enter a valid number of votes");
-        return;
-      }
-
-      const cost = votes * votes;
-      if (!confirm(`This will cost ${cost} credits. Proceed?`)) return;
-
+      if (votes <= 0) return alert("Invalid votes");
+      
       try {
-        await castVote(problemUUID, votes);
-        await refreshChainStats();
-        alert("Vote successfully recorded on blockchain");
+        await castVote(chainProblemId, votes);
+        await refreshStats();
         voteInput.value = "";
         costPreview.innerText = "";
+        alert("Vote recorded on blockchain");
       } catch (err) {
         console.error(err);
         alert("Transaction failed");
       }
     };
   }
-
-  // ---------------- COMPLETION VOTING ----------------
-  if (p.status === "Completion Voting") {
+  
+  /* ---------------- COMPLETION VOTING ---------------- */
+  if (p.status_code === 2) {
     const section = document.getElementById("completionVoting");
     section.hidden = false;
-
+    
     document.getElementById("yesBtn").onclick = async () => {
-      await voteCompletion(problemUUID, true);
+      await voteCompletion(chainProblemId, true);
+      await refreshStats();
       alert("Vote recorded");
     };
-
+    
     document.getElementById("noBtn").onclick = async () => {
-      await voteCompletion(problemUUID, false);
+      await voteCompletion(chainProblemId, false);
+      await refreshStats();
       alert("Vote recorded");
     };
   }
