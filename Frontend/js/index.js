@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (sessionError || !session) {
       // ❌ Not logged in
-      window.location.href = "../html/login.html";
+      window.location.href = "../html/landing.html";
       return;
     }
 
