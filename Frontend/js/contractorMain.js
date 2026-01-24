@@ -103,6 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Remark saved");
     }
     
+    /* MARK COMPLETED (DB ONLY) */
     /* MARK COMPLETED */
     if (completeBtn) {
       const id = completeBtn.dataset.id;
@@ -133,7 +134,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         alert("Blockchain transaction failed");
       }
     }
-  );
+    
+  });
   
   /* ---------------- LOGOUT ---------------- */
   document.getElementById("logoutBtn").onclick = async () => {

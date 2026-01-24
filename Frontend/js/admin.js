@@ -1,107 +1,109 @@
-import { getVotingContract } from "./blockchain.js";
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
+import { getVotingContract } from "../js/blockchain.js";
 
-function uuidToChainId(uuid) {
-  return BigInt("0x" + uuid.replace(/-/g, "").slice(0, 16)).toString();
+function toChainId(uuid) {
+  return ethers.utils.keccak256(
+    ethers.utils.toUtf8Bytes(uuid)
+  );
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   const container = document.getElementById("problems");
 
-  /* ---------------- AUTH CHECK ---------------- */
+  /* ---------- AUTH ---------- */
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
-    alert("Admin login required");
+    alert("Login required");
     return;
   }
 
-  /* ---------------- ADMIN WALLET CHECK ---------------- */
-  const voting = await getVotingContract();
-  const signerAddress = await voting.signer.getAddress();
-  const contractAdmin = await voting.admin();
-
-  if (signerAddress.toLowerCase() !== contractAdmin.toLowerCase()) {
-    alert("Not admin wallet");
-    return;
-  }
-
-  document.getElementById("adminInfo").innerText =
-    `Admin Wallet: ${signerAddress}`;
-
-  /* ---------------- LOAD PROBLEMS ---------------- */
-  const { data: problems } = await supabase
+  /* ---------- LOAD PROBLEMS ---------- */
+  const { data: problems, error } = await supabase
     .from("problems")
     .select("*")
-    .order("created_at");
+    .order("status_code");
 
-  problems.forEach(p => {
-    const chainId = uuidToChainId(p.id);
+  if (error || !problems) {
+    container.innerText = "Failed to load problems";
+    return;
+  }
 
+  const voting = await getVotingContract();
+
+  problems.forEach((p) => {
     const div = document.createElement("div");
-    div.style.border = "1px solid #ccc";
-    div.style.padding = "10px";
-    div.style.marginBottom = "10px";
+    div.className = "problem";
+
+    const chainId = toChainId(p.id);
 
     div.innerHTML = `
       <h3>${p.title}</h3>
-      <p>Status: ${p.status}</p>
+      <p>Status: <strong>${p.status}</strong></p>
 
-      ${
-        p.status === "Initial Voting"
-          ? `<button data-action="close-initial" data-id="${chainId}" data-uuid="${p.id}">
-               Close Initial Voting
-             </button>`
-          : ""
-      }
-
-      ${
-        p.status === "Completion Voting"
-          ? `<button data-action="close-completion" data-id="${chainId}" data-uuid="${p.id}">
-               Close Completion Voting
-             </button>`
-          : ""
-      }
+      ${p.status_code === 0 ? `<button data-act="register">Register On-Chain</button>` : ""}
+      ${p.status_code === 1 ? `<button data-act="closeInitial">Close Initial Voting</button>` : ""}
+      ${p.status_code === 3 ? `<button data-act="closeCompletion">Close Completion Voting</button>` : ""}
     `;
 
+    div.onclick = async (e) => {
+      const act = e.target.dataset.act;
+      if (!act) return;
+
+      try {
+        /* ---------- REGISTER ---------- */
+        if (act === "register") {
+          const tx = await voting.vote(chainId, 1);
+          await tx.wait();
+
+          await supabase.from("problems").update({
+            status: "Initial Voting",
+            status_code: 1
+          }).eq("id", p.id);
+
+          alert("Registered & Initial Voting started");
+          location.reload();
+        }
+
+        /* ---------- CLOSE INITIAL ---------- */
+        if (act === "closeInitial") {
+          const tx = await voting.moveToUnderProgress(chainId);
+          await tx.wait();
+
+          await supabase.from("problems").update({
+            status: "Under Progress",
+            status_code: 2
+          }).eq("id", p.id);
+
+          alert("Initial voting closed");
+          location.reload();
+        }
+
+        /* ---------- CLOSE COMPLETION ---------- */
+        if (act === "closeCompletion") {
+          const tx = await voting.closeCompletionVoting(chainId);
+          await tx.wait();
+
+          const phase = await voting.getPhase(chainId);
+
+          const finalStatus =
+            phase === 3 ? { status: "Completed", status_code: 4 }
+                        : { status: "Failed", status_code: 5 };
+
+          await supabase.from("problems")
+            .update(finalStatus)
+            .eq("id", p.id);
+
+          alert("Completion voting closed");
+          location.reload();
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Blockchain action failed");
+      }
+    };
+
     container.appendChild(div);
-  });
-
-  /* ---------------- EVENTS ---------------- */
-  container.addEventListener("click", async (e) => {
-    const btn = e.target;
-    if (!btn.dataset.action) return;
-
-    const chainId = btn.dataset.id;
-    const uuid = btn.dataset.uuid;
-
-    try {
-      if (btn.dataset.action === "close-initial") {
-        await voting.closeInitialVoting(chainId);
-
-        await supabase.from("problems").update({
-          status: "Under Progress",
-          status_code: 2
-        }).eq("id", uuid);
-      }
-
-      if (btn.dataset.action === "close-completion") {
-        await voting.closeCompletionVoting(chainId);
-
-        const phase = await voting.getPhase(chainId);
-        const finalStatus =
-          Number(phase) === 3 ? "Completed" : "Failed";
-
-        await supabase.from("problems").update({
-          status: finalStatus,
-          status_code: finalStatus === "Completed" ? 4 : 5
-        }).eq("id", uuid);
-      }
-
-      alert("Action successful");
-      location.reload();
-    } catch (err) {
-      console.error(err);
-      alert("Blockchain action failed");
-    }
   });
 });
