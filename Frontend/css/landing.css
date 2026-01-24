@@ -1,19 +1,14 @@
-/* ================================
-       PROOF OF FIX - LANDING PAGE
-       High Energy Premium Design
-       ================================ */
-
-    * {
+* {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
     :root {
-      --primary-blue: #637efe;
-      --primary-gradient: linear-gradient(135deg, #637efe 0%, #637efe 100%);
-      --secondary-gradient: linear-gradient(135deg, #637efe 0%, #637efe 100%);
-      --accent-gradient: linear-gradient(135deg, #6ba3e0 0%, #637efe 100%);
+      --primary-blue: #4a90e2;
+      --primary-gradient: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      --secondary-gradient: linear-gradient(135deg, #5b9bd5 0%, #4a90e2 100%);
+      --accent-gradient: linear-gradient(135deg, #6ba3e0 0%, #4a90e2 100%);
       --light-bg: #e8edf4;
       --card-bg: #ffffff;
       --card-border: #d1dbea;

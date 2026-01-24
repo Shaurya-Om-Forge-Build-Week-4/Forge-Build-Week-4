@@ -7,11 +7,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       error: sessionError
     } = await supabase.auth.getSession();
 
-    if (sessionError || !session) {
-      // ❌ Not logged in
-      window.location.href = "../html/landing.html";
-      return;
-    }
+    // if (sessionError || !session) {
+    //   // ❌ Not logged in
+    //   window.location.href = "../html/login.html";
+    //   return;
+    // }
 
     const userId = session.user.id;
 
@@ -22,11 +22,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       .eq("id", userId)
       .single();
 
-    if (profileError || !profile) {
-      console.error("Profile fetch error:", profileError);
-      window.location.href = "../html/login.html";
-      return;
-    }
+    // if (profileError || !profile) {
+    //   console.error("Profile fetch error:", profileError);
+    //   window.location.href = "../html/login.html";
+    //   return;
+    // }
 
     // 3. Redirect based on role
     if (!profile.isContractor) {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       window.location.href = "../html/contractor.html";
     } else {
       // Unknown role → force re-login
-      window.location.href = "../html/login.html";
+      // window.location.href = "../html/login.html";
     }
 
   } catch (err) {

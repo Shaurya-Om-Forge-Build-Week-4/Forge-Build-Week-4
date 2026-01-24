@@ -2,35 +2,147 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <title>BlocSoc</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .loader {
-            font-size: 18px;
-            opacity: 0.8;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof of Fix - Blockchain-Powered Civic Accountability</title>
+  <link rel="stylesheet" href="../css/landing.css">
 </head>
 
 <body>
-    <div class="loader">Checking authorization...</div>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-logo">Proof of Fix</div>
+      <div class="nav-buttons">
+        <a href="../html/login.html" class="nav-btn nav-btn-login">Login</a>
+        <a href="../html/signup.html" class="nav-btn nav-btn-signup">Sign Up</a>
+      </div>
+    </div>
+  </nav>
 
-    <!-- Supabase client (same as used in other pages) -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script type="module" src="../js/supabaseClient.js"></script>
-    <script type="module" src="../js/index.js"></script>S
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1 class="hero-title">Revolutionizing Civic Accountability</h1>
+        <p class="hero-subtitle">
+          Combining blockchain transparency, AI-powered problem detection, and quadratic voting
+          to ensure every civic issue gets resolved—with complete accountability at every step.
+        </p>
+        <div class="hero-cta">
+          <a href="#impact" class="cta-btn cta-primary">See How It Works</a>
+        </div>
+      </div>
+
+      <!-- Tech Stack Grid -->
+      <div class="tech-stack">
+        <div class="tech-card">
+          <div class="tech-icon">🔗</div>
+          <h3>Blockchain</h3>
+          <p>Smart contracts ensure transparent fund allocation and immutable tracking</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🤖</div>
+          <h3>AI Detection</h3>
+          <p>Computer vision identifies and verifies civic problems automatically</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">🗳️</div>
+          <h3>Quadratic Voting</h3>
+          <p>Democratic, weighted voting prevents manipulation and ensures fairness</p>
+        </div>
+        <div class="tech-card">
+          <div class="tech-icon">✅</div>
+          <h3>Verification</h3>
+          <p>AI validates completion and flags non-compliance automatically</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Section -->
+  <section id="impact" class="impact-section">
+    <h2 class="section-title">Real Impact, Real Change</h2>
+    <div class="impact-grid">
+      <div class="impact-card">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=2070" alt="Pothole repair"
+          class="impact-image">
+        <div class="impact-content">
+          <h3>Infrastructure Problems</h3>
+          <p>AI identifies potholes, broken sidewalks, and damaged roads. Communities vote on priorities, funds are
+            allocated via smart contracts, and completion is automatically verified.</p>
+          <span class="impact-badge">AI-Verified</span>
+        </div>
+      </div>
+
+      <div class="impact-card">
+        <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?q=80&w=2070" alt="Waste management"
+          class="impact-image">
+        <div class="impact-content">
+          <h3>Waste Management</h3>
+          <p>Track garbage accumulation, fund cleanup initiatives, and verify results—all on an immutable blockchain
+            ensuring accountability from start to finish.</p>
+          <span class="impact-badge">Blockchain-Tracked</span>
+        </div>
+      </div>
+
+      <div class="impact-card">
+        <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2070" alt="Water supply"
+          class="impact-image">
+        <div class="impact-content">
+          <h3>Water Infrastructure</h3>
+          <p>Monitor water supply issues, allocate repair funds transparently, and ensure every rupee reaches the right
+            hands with complete visibility.</p>
+          <span class="impact-badge">Full Transparency</span>
+        </div>
+      </div>
+
+      <div class="impact-card">
+        <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2069" alt="Community"
+          class="impact-image">
+        <div class="impact-content">
+          <h3>Community Empowerment</h3>
+          <p>Decentralized voting gives every voice equal weight. Quadratic mechanisms prevent vote manipulation while
+            ensuring democratic decision-making.</p>
+          <span class="impact-badge">Quadratic Voting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Flow Section -->
+  <section class="process-section">
+    <h2 class="section-title">How It Works</h2>
+    <div class="process-flow">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <h4>AI Detection</h4>
+        <p>Computer vision scans images to identify civic problems across neighborhoods</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <h4>Community Voting</h4>
+        <p>Residents vote on priorities using quadratic voting for democratic allocation</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <h4>Smart Contracts</h4>
+        <p>Funds are released automatically to assigned wallets via blockchain</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <h4>AI Verification</h4>
+        <p>System verifies completion and flags any non-compliance publicly</p>
+      </div>
+    </div>
+  </section>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script type="module" src="../js/supabaseClient.js"></script>
+  <script type="module" src="../js/index.js"></script>
 </body>
 
 </html>
