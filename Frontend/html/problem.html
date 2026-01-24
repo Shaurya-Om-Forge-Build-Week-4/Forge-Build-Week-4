@@ -5,53 +5,68 @@
     <meta charset="UTF-8" />
     <title>Problem Details</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="../css/problem.css" />
 
     <!-- Supabase SDK -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+    <!-- Supabase Client Init -->
+    <script>
+      const SUPABASE_URL = "https://boocborspzmgivjqrahr.supabase.co";
+      const SUPABASE_ANON_KEY = "sb_publishable_LB3wTXMuOHWjK8n5tGA6LQ_pnWwplGP";
+      window.supabaseClient = supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+    </script>
 </head>
 
+
 <body>
-
+    
     <div class="problem-container">
-
+        
         <img id="problemImage" class="problem-image" alt="Problem image" hidden />
-
+        
         <h1 id="problemTitle"></h1>
-
+        
         <div class="meta">
             <span id="status"></span>
             <span id="locality"></span>
         </div>
-
+        
         <p id="description"></p>
-
+        
         <div class="details">
             <p id="cost"></p>
             <p id="advancedAmount"></p>
             <p id="totalAmount"></p>
-            <p id="totalVotes"></p>
+            <p id="displayTotalVotes"></p>
             <p id="startDate"></p>
             <p id="endDate"></p>
         </div>
-
-        <p id="remarks" class="remarks"></p>
+        
         <div id="votingSection" hidden>
-            <input type="number" id="voteCount" placeholder="Enter votes" min="1" />
-
+            <input
+            type="number"
+            id="voteInput"
+            placeholder="Enter votes"
+            min="1"
+            />
+            
             <button id="voteBtn" class="vote-btn" hidden>Vote</button>
+            
             <p id="myVotes"></p>
-            <p id="totalVotes"></p>
+            <p id="chainTotalVotes"></p>
+            
             <div id="completionVoting" hidden>
                 <button id="yesBtn">Yes, Solved</button>
                 <button id="noBtn">No, Not Solved</button>
             </div>
-
-
         </div>
-
+        
+        
         <script type="module" src="../js/problem.js"></script>
-</body>
-
-</html>
+    </body>
+    
+    </html>

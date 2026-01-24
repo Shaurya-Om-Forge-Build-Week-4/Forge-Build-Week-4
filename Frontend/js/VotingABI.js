@@ -5,24 +5,6 @@ export default[
 				"internalType": "uint256",
 				"name": "problemId",
 				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "locality",
-				"type": "uint256"
-			}
-		],
-		"name": "createProblem",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "problemId",
-				"type": "uint256"
 			}
 		],
 		"name": "finalizeCompletion",
@@ -42,42 +24,6 @@ export default[
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "problemId",
-				"type": "uint256"
-			}
-		],
-		"name": "moveToUnderProgress",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "user",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "locality",
-				"type": "uint256"
-			}
-		],
-		"name": "registerUser",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	},
 	{
 		"inputs": [
@@ -113,19 +59,6 @@ export default[
 		"name": "voteCompletion",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "admin",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -210,6 +143,19 @@ export default[
 		"type": "function"
 	},
 	{
+		"inputs": [],
+		"name": "INITIAL_CREDITS",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -220,9 +166,9 @@ export default[
 		"name": "problems",
 		"outputs": [
 			{
-				"internalType": "uint256",
-				"name": "locality",
-				"type": "uint256"
+				"internalType": "bool",
+				"name": "exists",
+				"type": "bool"
 			},
 			{
 				"internalType": "enum Voting.Phase",
@@ -242,25 +188,6 @@ export default[
 			{
 				"internalType": "uint256",
 				"name": "noVotes",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "userLocality",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
 				"type": "uint256"
 			}
 		],
