@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     voteInput.addEventListener("input", () => {
       const v = Number(voteInput.value);
       costPreview.innerText =
-      v > 0 ? `Cost: ${v * v} credits` : "";
+      v > 0 ? `Cost: ${v*(v+1)*(2*v+1)/6} credits` : "";
     });
     
     document.getElementById("voteBtn").onclick = async () => {

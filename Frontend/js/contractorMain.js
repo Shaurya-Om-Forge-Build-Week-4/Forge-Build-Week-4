@@ -58,7 +58,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     card.innerHTML = `
       <h3>${p.title}</h3>
+      ${p.assigned ? `<p><strong>Advance Paid:</strong> ₹${p.advance_paid}</p>` : ""}
+      <img src="${p.image_url || "https://via.placeholder.com/300x150"}" />
+      <p>${p.assigned ? `<p><strong>Advance Paid:</strong> ₹${p.advance_paid}</p>` : ""}</p>
       <p><strong>Status:</strong> ${p.status}</p>
+      <p><strong>Sector:</strong> ${p.locality}</p>
     
       <textarea
         id="remark-${p.id}"

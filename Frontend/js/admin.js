@@ -11,6 +11,78 @@ document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   const container = document.getElementById("problems");
 
+  document.getElementById("startAll").onclick = async () => {
+  const { data: problems } = await supabase
+    .from("problems")
+    .select("id")
+    .eq("status_code", 0);
+
+  for (const p of problems) {
+    await supabase.from("problems").update({
+      status: "Initial Voting",
+      status_code: 1
+    }).eq("id", p.id);
+  }
+
+  alert("Initial voting started for all problems");
+  location.reload();
+};
+
+document.getElementById("closeAll").onclick = async () => {
+  const voting = await getVotingContract();
+
+  const { data: problems } = await supabase
+    .from("problems")
+    .select("*")
+    .eq("status_code", 1);
+
+  const byLocality = {};
+
+  problems.forEach(p => {
+    if (!byLocality[p.locality]) byLocality[p.locality] = [];
+    byLocality[p.locality].push(p);
+  });
+
+  for (const locality in byLocality) {
+    let winner = null;
+    let maxVotes = -1;
+
+    for (const p of byLocality[locality]) {
+      const chainId = toChainId(p.id);
+      const votes = await voting.getTotalVotes(chainId);
+
+      if (votes > maxVotes) {
+        maxVotes = votes;
+        winner = p;
+      }
+    }
+
+    // Winner → Under Progress
+    if (winner) {
+      await supabase.from("problems").update({
+        status: "Under Progress",
+        status_code: 2,
+        assigned: true
+      }).eq("id", winner.id);
+    }
+
+    // Others → Draft
+    for (const p of byLocality[locality]) {
+      if (!winner || p.id !== winner.id) {
+        await supabase.from("problems").update({
+          status: "Draft",
+          status_code: 0
+        }).eq("id", p.id);
+      }
+    }
+  }
+
+  alert("Initial voting closed & winners selected");
+  location.reload();
+};
+
+
+
   /* ---------- AUTH ---------- */
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
