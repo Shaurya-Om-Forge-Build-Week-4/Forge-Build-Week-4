@@ -103,44 +103,20 @@ async function loadProblemCardsForLocality(userLocality) {
 
   data.forEach((problem) => {
     const card = document.createElement("div");
+card.className = "problem-card";
 
-    card.style.cssText = `
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      overflow: hidden;
-      cursor: pointer;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    `;
+card.innerHTML = `
+  <img src="${problem.image_url || "https://via.placeholder.com/300x150"}" />
+  <div class="card-body">
+    <h4>${problem.title}</h4>
+    <p>${problem.description}</p>
+    <span class="status-badge">${problem.status}</span>
+  </div>
+`;
 
-    card.innerHTML = `
-      <img
-        src="${problem.image_url || "https://via.placeholder.com/300x150"}"
-        style="width:100%; height:120px; object-fit:cover;"
-      />
-      <div style="padding:10px;">
-        <h4 style="margin:0 0 5px 0;">${problem.title}</h4>
-        <p style="font-size:13px; margin:0 0 10px 0;">
-          ${problem.description}
-        </p>
-        <button
-          style="
-            font-size: 12px;
-            padding: 5px 8px;
-            background: #e5e7eb;
-            border: none;
-            border-radius: 4px;
-          "
-        >
-          ${problem.status}
-        </button>
-      </div>
-    `;
-
-    // Navigate to details page (future)
-    card.addEventListener("click", () => {
-    window.location.href = `../html/problem.html?problemId=${problem.id}`;
-    });
+card.addEventListener("click", () => {
+  window.location.href = `../html/problem.html?problemId=${problem.id}`;
+});
 
     container.appendChild(card);
   });

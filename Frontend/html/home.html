@@ -1,39 +1,55 @@
 <!doctype html>
-<html>
-  <head>
-    <title>Home</title>
-    <link rel="stylesheet" href="../css/home.css" />
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home | Civic Accountability</title>
 
-  <body>
-    <body>
-      <div class="signup-container">
-        <h2>Home</h2>
+  <link rel="stylesheet" href="../css/home.css" />
 
-        <p id="user-info">Loading...</p>
+  <!-- Supabase SDK -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
+</head>
 
-        <!-- Contractor Dashboard Button -->
-        <button id="contractor-btn" style="display: none; margin-bottom: 20px">
-          Go to Contractor Dashboard
-        </button>
+<body>
 
-        <!-- Cards Container -->
-        <div
-          id="cards-container"
-          style="
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-          "
-        ></div>
+  <!-- ================= HEADER ================= -->
+  <header class="app-header">
+    <div class="header-left">
+      <h1>Civic Dashboard</h1>
+      <p>Local issues in your neighborhood</p>
+    </div>
 
-        <br />
-        <button id="logout">Logout</button>
+    <div class="header-right">
+      <button id="logout" class="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main class="main-container">
+
+    <!-- USER INFO -->
+    <section class="user-card">
+      <div id="user-info">Loading user info…</div>
+
+      <button id="contractor-btn" class="contractor-btn" style="display:none;">
+        Contractor Dashboard
+      </button>
+    </section>
+
+    <!-- PROBLEMS -->
+    <section class="problems-section">
+      <h2>Active Problems</h2>
+
+      <div id="cards-container" class="cards-grid">
+        <!-- Cards injected by JS -->
       </div>
-    </body>
+    </section>
 
-    <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
-    <script type="module" src="../js//supabaseClient.js" defer></script>
-    <script type="module" src="../js/home.js" defer></script>
-  </body>
+  </main>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script type="module" src="../js/supabaseClient.js"></script>
+  <script type="module" src="../js/home.js"></script>
+
+</body>
 </html>
