@@ -1,52 +1,47 @@
 from detection import detect_objects
 from severity import compute_severity
 
-try:
-    from geminioverflow import classify_overflow
-    GEMINI_ENABLED = True
-except ImportError:
-    GEMINI_ENABLED = False
+IMAGE_PATH = "dataset_mock/nbd1/img6.jpg"
 
-IMAGE_PATH = "ml/dataset_mock/nbd1/img2.jpg"
-SEVERITY_THRESHOLD = 0.10   # lower = more sensitive
+# Tunable thresholds (based on what you observed)
+NOISE_THRESHOLD = 0.05       # ignore tiny detections
+OVERFLOW_THRESHOLD = 0.30    # >= this is likely overflow
 
-# Step 1: Run YOLO (broad perception)
+# Step 1: Run YOLO
 detections = detect_objects(IMAGE_PATH)
 
-# Step 2: If YOLO sees NOTHING at all, safe to say no issue
+# Step 2: No detections → no issue
 if not detections:
     result = {
         "problem": None,
-        "status": "no_issue"
+        "status": "no_issue",
+        "severity": 0.0
     }
 
 else:
-    # Step 3: Compute severity on ALL suspicious detections
+    # Step 3: Compute severity
     severity = compute_severity(IMAGE_PATH, detections)
 
-    if severity <= SEVERITY_THRESHOLD:
-        # Something exists, but looks harmless
+    # Step 4: Decide status
+    if severity < NOISE_THRESHOLD:
         result = {
             "problem": "garbage",
             "status": "normal",
             "severity": round(severity, 3)
         }
 
+    elif severity < OVERFLOW_THRESHOLD:
+        result = {
+            "problem": "garbage",
+            "status": "partial_overflow",
+            "severity": round(severity, 3)
+        }
+
     else:
-        # Step 4: Potential problem → semantic check
         result = {
             "problem": "garbage",
             "status": "potential_overflow",
             "severity": round(severity, 3)
         }
-
-        if GEMINI_ENABLED:
-            try:
-                gemini_result = classify_overflow(IMAGE_PATH)
-                result["status"] = gemini_result.get(
-                    "status", "potential_overflow"
-                )
-            except Exception as e:
-                print("Gemini error:", e)
 
 print(result)
