@@ -82,16 +82,6 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(99, 126, 254, 0.15);
 }
 
-.sign-up-link {
-    color: black;
-    font-weight: 500;
-    transition: color 0.2s ease;
-}
-
-.sign-up-link:hover {
-    color: gray;
-}
-
 /* ================================
    BUTTON — MATCH INPUT WIDTH
 ================================ */
@@ -121,6 +111,31 @@ button {
 button:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(99, 126, 254, 0.35);
+}
+
+/* ================================
+   SIGNUP LINK SECTION — CENTERED
+================================ */
+
+.signup-container > p:first-of-type {
+  margin-left: 72px;
+  margin-top: 24px;
+  width: 320px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.sign-up-link {
+  color: #637efe;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sign-up-link:hover {
+  color: #4a5fd4;
+  text-decoration: underline;
 }
 
 /* ================================

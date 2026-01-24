@@ -1,61 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <title>Sign Up</title>
     <link rel="stylesheet" href="../css/signup.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="signup-container">
-        <h2>Create Account</h2>
+      <h2>Create Account</h2>
 
-        <form id="signup-form">
-            <input type="text" id="name" placeholder="Full Name" required />
+      <form id="signup-form">
+        <input type="text" id="name" placeholder="Full Name" required />
 
-            <input type="email" id="email" placeholder="Email" required />
+        <input type="email" id="email" placeholder="Email" required />
 
-            <input type="password" id="password" placeholder="Password" required />
+        <input type="password" id="password" placeholder="Password" required />
 
-            <select id="locality" required>
-                <option value="">Select Locality</option>
-                <option value="Sector 1">Sector 1</option>
-                <option value="Sector 2">Sector 2</option>
-                <option value="Sector 3">Sector 3</option>
-                <option value="Sector 4">Sector 4</option>
-                <option value="Sector 5">Sector 5</option>
-            </select>
+        <select id="locality" required>
+          <option value="">Select Locality</option>
+          <option value="Sector 1">Sector 1</option>
+          <option value="Sector 2">Sector 2</option>
+          <option value="Sector 3">Sector 3</option>
+          <option value="Sector 4">Sector 4</option>
+          <option value="Sector 5">Sector 5</option>
+        </select>
 
-            <!-- User Type Selection -->
-            <div style="margin-bottom: 15px;">
-                <label style="display: block; font-weight: bold; margin-bottom: 5px;">
-                    User Type
-                </label>
+        <!-- User Type Selection -->
+        <div style="margin-bottom: 15px">
+          <label style="display: block; font-weight: bold; margin-bottom: 5px">
+            User Type
+          </label>
 
-                <label style="margin-right: 15px;">
-                    <input type="radio" name="user_type" value="resident" checked />
-                    Resident
-                </label>
+          <label style="margin-right: 15px">
+            <input type="radio" name="user_type" value="resident" checked />
+            Resident
+          </label>
 
-                <label>
-                    <input type="radio" name="user_type" value="contractor" />
-                    Contractor
-                </label>
-            </div>
+          <label>
+            <input type="radio" name="user_type" value="contractor" />
+            Contractor
+          </label>
+        </div>
 
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>
+        Already have an account?
+        <a href="login.html" class="login-link">Login here</a>.
+      </p>
 
-            <button type="submit">Sign Up</button>
-        </form>
-
-        <p id="message"></p>
+      <p id="message"></p>
     </div>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
     <script type="module" src="../js/supabaseClient.js" defer></script>
     <script type="module" src="../js/signup.js" defer></script>
-
-</body>
-
-
+  </body>
 </html>

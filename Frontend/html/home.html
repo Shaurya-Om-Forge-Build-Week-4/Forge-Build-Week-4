@@ -1,40 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
-<head>
+  <head>
     <title>Home</title>
     <link rel="stylesheet" href="../css/home.css" />
-</head>
+  </head>
 
-<body>
-
+  <body>
     <body>
-        <div class="signup-container">
-            <h2>Home</h2>
+      <div class="signup-container">
+        <h2>Home</h2>
 
-            <p id="user-info">Loading...</p>
+        <p id="user-info">Loading...</p>
 
-            <!-- Contractor Dashboard Button -->
-            <button id="contractor-btn" style="display:none; margin-bottom: 20px;">
-                Go to Contractor Dashboard
-            </button>
+        <!-- Contractor Dashboard Button -->
+        <button id="contractor-btn" style="display: none; margin-bottom: 20px">
+          Go to Contractor Dashboard
+        </button>
 
-            <!-- Cards Container -->
-            <div id="cards-container" style="
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 15px;
-      "></div>
+        <!-- Cards Container -->
+        <div
+          id="cards-container"
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+          "
+        ></div>
 
-            <br />
-            <button id="logout">Logout</button>
-        </div>
+        <br />
+        <button id="logout">Logout</button>
+      </div>
     </body>
 
     <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
     <script type="module" src="../js//supabaseClient.js" defer></script>
-    <script type="module"src="../js/home.js" defer></script>
-
-</body>
-
+    <script type="module" src="../js/home.js" defer></script>
+  </body>
 </html>
