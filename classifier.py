@@ -12,9 +12,7 @@ from datetime import datetime
 # ========== SUPABASE CONFIGURATION ==========
 SUPABASE_URL = "https://boocborspzmgivjqrahr.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvb2Nib3JzcHptZ2l2anFyYWhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwOTI2MzMsImV4cCI6MjA4NDY2ODYzM30.paJIHp7a5kvmHbSt43WednMKEKMkmMr3wC0l_yJZfi4"
-# ============================================
 
-# Try to import vision libraries
 try:
     from ultralytics import YOLO
     YOLO_AVAILABLE = True
@@ -45,8 +43,8 @@ class DetectedObject:
     """Represents an object detected by the vision model"""
     label: str
     confidence: float
-    bbox: Tuple[int, int, int, int]  # x, y, width, height
-    area_percentage: float  # percentage of image occupied
+    bbox: Tuple[int, int, int, int] 
+    area_percentage: float 
 
 
 @dataclass
@@ -70,8 +68,7 @@ class VisionModelWrapper:
         self.model_type = model_type
         
         if model_type == "yolo" and YOLO_AVAILABLE:
-            # Load YOLOv8 model (will download on first use)
-            self.model = YOLO('yolov8n.pt')  # nano version for speed
+            self.model = YOLO('yolov8n.pt') 
         elif model_type == "mock":
             self.model = None
             print("Using mock detection for testing")
@@ -88,7 +85,7 @@ class VisionModelWrapper:
         Returns:
             Tuple of (ImageAnalysis object, raw image array)
         """
-        # Load image
+
         img = cv2.imread(image_path)
         if img is None:
             raise ValueError(f"Could not load image: {image_path}")
@@ -110,16 +107,16 @@ class VisionModelWrapper:
         detected_objects = []
         
         for box in results.boxes:
-            # Get box coordinates
+
             x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
             bbox_width = x2 - x1
             bbox_height = y2 - y1
             bbox_area = bbox_width * bbox_height
             
-            # Calculate area percentage
+
             area_percentage = (bbox_area / image_area) * 100
             
-            # Get label and confidence
+
             class_id = int(box.cls[0])
             label = results.names[class_id]
             confidence = float(box.conf[0])
@@ -144,17 +141,17 @@ class VisionModelWrapper:
         """
         detected_objects = []
         
-        # Convert to HSV for better color detection
+
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
-        # 1. Detect dark regions (potential potholes)
+
         _, dark_regions = cv2.threshold(gray, 50, 255, cv2.THRESH_BINARY_INV)
         contours, _ = cv2.findContours(dark_regions, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         for contour in contours:
             area = cv2.contourArea(contour)
-            if area > (image_area * 0.02):  # At least 2% of image
+            if area > (image_area * 0.02): 
                 x, y, w, h = cv2.boundingRect(contour)
                 detected_objects.append(DetectedObject(
                     label="pothole",
@@ -163,7 +160,7 @@ class VisionModelWrapper:
                     area_percentage=(area / image_area) * 100
                 ))
         
-        # 2. Detect road-like surfaces (gray/dark regions in lower half)
+
         lower_half = gray[height//2:, :]
         road_pixels = np.sum((lower_half > 30) & (lower_half < 150))
         road_percentage = (road_pixels / image_area) * 100
@@ -176,7 +173,6 @@ class VisionModelWrapper:
                 area_percentage=road_percentage
             ))
         
-        # 3. Detect colorful clutter (potential garbage)
         saturation = hsv[:, :, 1]
         high_sat = saturation > 100
         high_sat_percentage = (np.sum(high_sat) / image_area) * 100
@@ -196,14 +192,14 @@ class VisionModelWrapper:
                         area_percentage=(area / image_area) * 100
                     ))
         
-        # 4. Detect bright objects in upper portion (potential street lights)
+
         upper_third = gray[:height//3, :]
         _, bright_regions = cv2.threshold(upper_third, 200, 255, cv2.THRESH_BINARY)
         contours, _ = cv2.findContours(bright_regions, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         
         for contour in contours:
             area = cv2.contourArea(contour)
-            if area > (image_area * 0.001) and area < (image_area * 0.05):  # Small bright objects
+            if area > (image_area * 0.001) and area < (image_area * 0.05): 
                 x, y, w, h = cv2.boundingRect(contour)
                 detected_objects.append(DetectedObject(
                     label="light",
@@ -212,12 +208,12 @@ class VisionModelWrapper:
                     area_percentage=(area / image_area) * 100
                 ))
         
-        # 5. Detect water-like regions (blue-ish, reflective areas on ground)
+
         lower_blue = np.array([90, 50, 50])
         upper_blue = np.array([130, 255, 255])
         water_mask = cv2.inRange(hsv, lower_blue, upper_blue)
         
-        # Focus on lower half for water logging
+
         water_mask[:height//2, :] = 0
         water_pixels = np.sum(water_mask > 0)
         water_percentage = (water_pixels / image_area) * 100
@@ -230,13 +226,13 @@ class VisionModelWrapper:
                 area_percentage=water_percentage
             ))
         
-        # 6. Detect tree-like structures (brown/green vertical structures)
-        # Look for brown tones
+
+
         lower_brown = np.array([10, 50, 20])
         upper_brown = np.array([20, 255, 200])
         brown_mask = cv2.inRange(hsv, lower_brown, upper_brown)
         
-        # Look for green tones
+
         lower_green = np.array([35, 40, 40])
         upper_green = np.array([85, 255, 255])
         green_mask = cv2.inRange(hsv, lower_green, upper_green)
@@ -246,9 +242,8 @@ class VisionModelWrapper:
         
         for contour in contours:
             area = cv2.contourArea(contour)
-            if area > (image_area * 0.05):  # Significant tree presence
+            if area > (image_area * 0.05): 
                 x, y, w, h = cv2.boundingRect(contour)
-                # Check if it's more vertical (h > w suggests tree)
                 if h > w * 1.5:
                     detected_objects.append(DetectedObject(
                         label="tree",
@@ -274,7 +269,6 @@ class EnhancedCivicIssueClassifier:
     - Fallen trees (issue/not issue)
     """
     
-    # Category indicators
     GARBAGE_INDICATORS = {
         'bag', 'bags', 'container', 'bin', 'trash', 'bottle', 'bottles',
         'can', 'cans', 'box', 'boxes', 'plastic', 'paper', 'waste',
@@ -307,7 +301,6 @@ class EnhancedCivicIssueClassifier:
         'vegetation', 'leaves', 'foliage'
     }
     
-    # Thresholds
     GARBAGE_OVERFLOW_THRESHOLD = 20.0
     POTHOLE_MIN_SIZE = 2.0
     WATER_LOGGING_THRESHOLD = 8.0
@@ -348,17 +341,14 @@ class EnhancedCivicIssueClassifier:
         for obj in analysis.detected_objects:
             label_lower = obj.label.lower()
             
-            # Check for explicit pothole indicators
             for indicator in self.POTHOLE_INDICATORS:
                 if indicator in label_lower:
                     if obj.area_percentage >= self.POTHOLE_MIN_SIZE:
                         has_pothole = True
                         break
             
-            # Check for dark voids on road surface
             if 'dark' in label_lower or 'hole' in label_lower:
                 if obj.area_percentage >= self.POTHOLE_MIN_SIZE:
-                    # Check if in lower half (where roads typically are)
                     if obj.bbox[1] > analysis.height * 0.3:
                         has_pothole = True
                         break
@@ -384,11 +374,11 @@ class EnhancedCivicIssueClassifier:
                 garbage_coverage += obj.area_percentage
                 garbage_objects.append(obj)
         
-        # Check for clustering effect
+
         if len(garbage_objects) >= 5:
             garbage_coverage *= 1.3
         
-        # Determine status
+
         if garbage_coverage < 5.0:
             status = "not_present"
         elif garbage_coverage >= self.GARBAGE_OVERFLOW_THRESHOLD:
@@ -451,39 +441,36 @@ class EnhancedCivicIssueClassifier:
         for obj in analysis.detected_objects:
             label_lower = obj.label.lower()
             
-            # Check for light indicators
             for indicator in self.LIGHT_INDICATORS:
                 if indicator in label_lower:
                     light_objects.append(obj)
                     break
         
         if not light_objects:
-            # Try to detect based on brightness in upper portion
+
             height, width = raw_image.shape[:2]
             gray = cv2.cvtColor(raw_image, cv2.COLOR_BGR2GRAY)
             upper_portion = gray[:height//3, :]
             
-            # Check average brightness in upper portion
+
             avg_brightness = np.mean(upper_portion)
             
-            # If very bright spots exist in upper portion
+
             bright_pixels = np.sum(upper_portion > 200)
             bright_percentage = (bright_pixels / upper_portion.size) * 100
             
             if bright_percentage > 1.0:
-                # Likely has working street lights
+
                 return {"status": "working"}
             else:
                 return {"status": "not_detected"}
-        
-        # Analyze detected lights
-        # Check if lights are emitting light (bright regions)
+ 
         working_lights = 0
         
         for light in light_objects:
             x, y, w, h = light.bbox
             
-            # Extract region around light
+
             roi = raw_image[y:y+h, x:x+w]
             if roi.size == 0:
                 continue
@@ -491,7 +478,7 @@ class EnhancedCivicIssueClassifier:
             gray_roi = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
             avg_brightness = np.mean(gray_roi)
             
-            # If bright enough, consider it working
+
             if avg_brightness > 150:
                 working_lights += 1
         
@@ -517,7 +504,6 @@ class EnhancedCivicIssueClassifier:
         """
         water_coverage = 0.0
         
-        # Check for detected water objects
         for obj in analysis.detected_objects:
             label_lower = obj.label.lower()
             
@@ -526,29 +512,29 @@ class EnhancedCivicIssueClassifier:
                     water_coverage += obj.area_percentage
                     break
         
-        # Additional check: analyze image for water-like characteristics
+
         height, width = raw_image.shape[:2]
         hsv = cv2.cvtColor(raw_image, cv2.COLOR_BGR2HSV)
         
-        # Focus on lower half (ground level)
+
         lower_half = hsv[height//2:, :, :]
         
-        # Detect blue-ish colors (water)
+
         lower_blue = np.array([90, 30, 30])
         upper_blue = np.array([130, 255, 255])
         water_mask = cv2.inRange(lower_half, lower_blue, upper_blue)
         
         water_pixels = np.sum(water_mask > 0)
         lower_half_area = lower_half.shape[0] * lower_half.shape[1]
-        additional_water_percentage = (water_pixels / lower_half_area) * 50  # Scale to image
+        additional_water_percentage = (water_pixels / lower_half_area) * 50 
         
         total_water_coverage = water_coverage + additional_water_percentage
         
-        # Check for reflections (glossy surfaces suggest water)
+
         gray = cv2.cvtColor(raw_image, cv2.COLOR_BGR2GRAY)
         lower_gray = gray[height//2:, :]
         
-        # High variance in small regions suggests reflections
+
         variance = np.var(lower_gray)
         
         has_issue = (
@@ -576,7 +562,7 @@ class EnhancedCivicIssueClassifier:
         tree_coverage = 0.0
         horizontal_trees = []
         
-        # Check for detected tree objects
+
         for obj in analysis.detected_objects:
             label_lower = obj.label.lower()
             
@@ -584,21 +570,21 @@ class EnhancedCivicIssueClassifier:
                 if indicator in label_lower:
                     tree_coverage += obj.area_percentage
                     
-                    # Check if tree is horizontal (fallen)
+
                     x, y, w, h = obj.bbox
                     
-                    # Fallen trees are typically more horizontal than vertical
-                    if w > h * 1.2:  # Width > height suggests horizontal orientation
-                        # Also check if in lower portion (blocking ground/road)
+
+                    if w > h * 1.2: 
+                        
                         if y > analysis.height * 0.3:
                             horizontal_trees.append(obj)
                     break
         
-        # Additional heuristic: large brown/woody objects on ground
+
         height, width = raw_image.shape[:2]
         hsv = cv2.cvtColor(raw_image, cv2.COLOR_BGR2HSV)
         
-        # Detect brown tones in lower half
+
         lower_half = hsv[height//2:, :, :]
         lower_brown = np.array([10, 30, 30])
         upper_brown = np.array([25, 255, 200])
@@ -642,7 +628,7 @@ class CompleteCivicIssueDetectionSystem:
         Returns:
             Dictionary with all classification results
         """
-        # Check if file exists
+
         if not Path(image_path).exists():
             raise FileNotFoundError(f"Image not found: {image_path}")
         
@@ -650,13 +636,13 @@ class CompleteCivicIssueDetectionSystem:
             print(f"Processing image: {image_path}")
             print("="*60)
         
-        # Step 1: Detect objects
+
         image_analysis, raw_image = self.vision_model.process_image(image_path)
         
-        # Step 2: Classify all civic issues
+
         result = self.classifier.classify_all_issues(image_analysis, raw_image)
 
-        # ADD IMAGE PATH TO RESULT
+
         result['image_path'] = image_path
         
         if verbose:
@@ -710,10 +696,10 @@ class CompleteCivicIssueDetectionSystem:
         """
         result = self.process_image(image_path, verbose=False)
         
-        # Create detailed report
+
         report = {
             "image_path": image_path,
-            "analysis_date": "2026-01-24",  # You can use datetime.now() for real timestamp
+            "analysis_date": "2026-01-24", 
             "issues_detected": [],
             "summary": {
                 "total_issues": 0,
@@ -723,7 +709,7 @@ class CompleteCivicIssueDetectionSystem:
             "detailed_results": result
         }
         
-        # Analyze results and categorize issues
+
         if result['potholes']['status'] == 'present':
             report['issues_detected'].append("Potholes detected")
             report['summary']['critical_issues'] += 1
@@ -749,7 +735,7 @@ class CompleteCivicIssueDetectionSystem:
         
         report['summary']['total_issues'] = len(report['issues_detected'])
         
-        # Save to file if requested
+
         if output_path:
             with open(output_path, 'w') as f:
                 json.dump(report, f, indent=2)
@@ -763,7 +749,7 @@ class SupabaseConnector:
     def __init__(self, url: str, key: str):
         """Initialize Supabase client"""
         self.supabase: Client = create_client(url, key)
-        print("✅ Connected to Supabase")
+        print("Connected to Supabase")
     
     def generate_title_and_description(self, result: Dict) -> List[Dict]:
         """
@@ -773,9 +759,6 @@ class SupabaseConnector:
         issues = []
         image_path = result.get("image_path", "")
         
-        # Check each issue type and create entries
-        
-        # 1. Potholes
         if result.get("potholes", {}).get("status") == "present":
             issues.append({
                 "title": "Potholes",
@@ -783,13 +766,10 @@ class SupabaseConnector:
                 "image_url": image_path
             })
         
-        # Alternative pothole title
         pothole_alt_titles = ["Open Manholes", "Road Damage"]
         if result.get("potholes", {}).get("status") == "present" and len(issues) > 0:
-            # You can randomize or use context to pick title
             pass
         
-        # 2. Garbage
         garbage_status = result.get("garbage", {}).get("status")
         if garbage_status == "overflowing":
             issues.append({
@@ -804,7 +784,6 @@ class SupabaseConnector:
                 "image_url": image_path
             })
         
-        # 3. Street Lights
         light_status = result.get("street_lights", {}).get("status")
         if light_status == "not_working":
             issues.append({
@@ -813,7 +792,6 @@ class SupabaseConnector:
                 "image_url": image_path
             })
         
-        # 4. Waterlogging
         if result.get("waterlogging", {}).get("status") == "issue":
             issues.append({
                 "title": "Drains Clogging",
@@ -821,7 +799,6 @@ class SupabaseConnector:
                 "image_url": image_path
             })
         
-        # 5. Fallen Trees
         if result.get("fallen_trees", {}).get("status") == "issue":
             issues.append({
                 "title": "Fallen Trees",
@@ -857,11 +834,9 @@ class SupabaseConnector:
         total_issues = 0
         
         for result in results:
-            # Generate all issues for this image
             issues = self.generate_title_and_description(result)
             total_issues += len(issues)
             
-            # Insert each issue
             for issue in issues:
                 response = self.insert_civic_issue(issue)
                 if response["success"]:
@@ -900,12 +875,10 @@ class SupabaseConnector:
             print(f"Error fetching data: {e}")
             return []
 
-# ==================== MAIN ENTRY POINT ====================
 
 def main():
     """Main function - Process all civic infrastructure images"""
     
-    # ========== CONFIGURE YOUR IMAGE PATHS HERE ==========
 
     IMAGE_PATHS = [
     # Sector 1
@@ -942,11 +915,10 @@ def main():
     
     system = CompleteCivicIssueDetectionSystem(use_yolo=YOLO_AVAILABLE)
     
-    print("\n" + "🏙️  CIVIC INFRASTRUCTURE MONITORING SYSTEM 🏙️".center(60))
+    print("\n" + "CIVIC INFRASTRUCTURE MONITORING SYSTEM".center(60))
     print("="*60 + "\n")
     
-    # Process ALL images in batch
-    print("📁 PROCESSING ALL IMAGES...")
+    print("PROCESSING ALL IMAGES...")
     print("-"*60)
     
     all_results = []
@@ -956,34 +928,30 @@ def main():
         try:
             result = system.process_image(image_path, verbose=False)
             all_results.append(result)
-            print(f"✅ Success")
+            print(f"Success")
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
             all_results.append({
                 "image_path": image_path,
                 "error": str(e)
             })
     
     print("\n" + "="*60)
-    print(f"✅ Processed {len(all_results)} images")
+    print(f"Processed {len(all_results)} images")
     
 
-    # Save all results to ONE JSON file
     output_file = "all_civic_results.json"
     with open(output_file, "w") as f:
         json.dump(all_results, f, indent=2)
     
-    print(f"💾 All results saved to: {output_file}")
+    print(f"All results saved to: {output_file}")
 
-    # Save to JSON file (backup)
     output_file = "all_civic_results.json"
     with open(output_file, "w") as f:
         json.dump(all_results, f, indent=2)
     
-    print(f"💾 Results saved to: {output_file}")
+    print(f"Results saved to: {output_file}")
 
-
-    # Convert results to title/description format for JSON
     formatted_results = []
     for result in all_results:
         issues = []
@@ -1026,79 +994,70 @@ def main():
         
         formatted_results.extend(issues)
     
-    # Save formatted results to JSON
     formatted_output_file = "civic_issues_formatted.json"
     with open(formatted_output_file, "w") as f:
         json.dump(formatted_results, f, indent=2)
     
-    print(f"💾 Formatted results saved to: {formatted_output_file}")
+    print(f"Formatted results saved to: {formatted_output_file}")
     
-    # ========== ADD THESE LINES FOR SUPABASE ==========
-    # ========== UPLOAD TO SUPABASE ==========
     print("\n" + "="*60)
-    print("📤 UPLOADING TO SUPABASE...")
+    print(" UPLOADING TO SUPABASE...")
     print("-"*60)
     
     try:
-        # Initialize Supabase connection
+
         supabase_conn = SupabaseConnector(SUPABASE_URL, SUPABASE_KEY)
         
-        # Upload all results (will create multiple entries per image if multiple issues found)
         upload_summary = supabase_conn.insert_batch(all_results)
         
-        print(f"\n📊 Upload Summary:")
+        print(f"\nUpload Summary:")
         print(f"   Images Processed: {upload_summary['total_images']}")
         print(f"   Total Issues Found: {upload_summary['total_issues']}")
-        print(f"   ✅ Successfully Uploaded: {upload_summary['successful']}")
-        print(f"   ❌ Failed: {upload_summary['failed']}")
+        print(f"   Successfully Uploaded: {upload_summary['successful']}")
+        print(f"   Failed: {upload_summary['failed']}")
         
         if upload_summary['errors']:
-            print(f"\n⚠️ Errors:")
+            print(f"\nErrors:")
             for error in upload_summary['errors']:
                 print(f"   - {error['image_path']} ({error['title']}): {error['error']}")
         
-        # Verify by fetching data
         print("\n" + "="*60)
-        print("🔍 VERIFYING DATA IN SUPABASE...")
+        print("VERIFYING DATA IN SUPABASE...")
         print("-"*60)
         
         all_issues = supabase_conn.get_all_issues()
-        print(f"✅ Found {len(all_issues)} total issue records in database")
+        print(f"Found {len(all_issues)} total issue records in database")
         
-        # Count by issue type
         potholes = supabase_conn.get_issues_by_title("Potholes")
         garbage = supabase_conn.get_issues_by_title("Garbage Overflow")
         lights = supabase_conn.get_issues_by_title("Faulty Streetlights")
         drains = supabase_conn.get_issues_by_title("Drains Clogging")
         trees = supabase_conn.get_issues_by_title("Fallen Trees")
         
-        print(f"\n📋 Issues by Type:")
-        print(f"   🕳️  Potholes: {len(potholes)}")
-        print(f"   🗑️  Garbage Overflow: {len(garbage)}")
-        print(f"   💡 Faulty Streetlights: {len(lights)}")
-        print(f"   💧 Drains Clogging: {len(drains)}")
-        print(f"   🌳 Fallen Trees: {len(trees)}")
+        print(f"\nIssues by Type:")
+        print(f"   Potholes: {len(potholes)}")
+        print(f"   Garbage Overflow: {len(garbage)}")
+        print(f"   Faulty Streetlights: {len(lights)}")
+        print(f"   Drains Clogging: {len(drains)}")
+        print(f"   Fallen Trees: {len(trees)}")
         
-        # Display sample entries
-        print(f"\n📄 Sample Entries:")
+        print(f"\nSample Entries:")
         print("-"*60)
-        for issue in all_issues[:5]:  # Show first 5
+        for issue in all_issues[:5]: 
             print(f"   Title: {issue['title']}")
             print(f"   Description: {issue['description'][:60]}...")
             print(f"   Image: {issue['image_url']}")
             print("-"*60)
         
     except Exception as e:
-        print(f"\n❌ Error connecting to Supabase: {e}")
+        print(f"\nError connecting to Supabase: {e}")
         print("   Make sure you've set SUPABASE_URL and SUPABASE_KEY correctly")
     
     print("\n" + "="*60)
-    print("✅ PROCESS COMPLETE!")
+    print("PROCESS COMPLETE!")
     print("="*60)
-    # ========== END SUPABASE INTEGRATION ==========
     
-    # Print the complete JSON output
-    print("\n📊 COMPLETE RESULTS (JSON):")
+    print("\nCOMPLETE RESULTS (JSON):")
     print("="*60)
     print(json.dumps(all_results, indent=2))
     

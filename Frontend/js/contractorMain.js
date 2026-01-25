@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   const container = document.getElementById("problemsContainer");
     
-  /* ---------------- AUTH ---------------- */
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -23,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   const userId = session.user.id;
   
-  /* ---------------- CONTRACTOR CHECK ---------------- */
   const { data: profile } = await supabase
   .from("profiles")
   .select("locality, isContractor, wallet")
@@ -43,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("localityBadge").innerText =
     `Locality: ${profile.locality}`;
   
-  /* ---------------- LOAD PROBLEMS ---------------- */
+
   const { data: problems } = await supabase
   .from("problems")
   .select("*")
@@ -91,12 +89,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     container.appendChild(card);
   });
   
-  /* ---------------- EVENTS ---------------- */
+
   container.addEventListener("click", async (e) => {
     const saveBtn = e.target.closest(".save-btn");
     const completeBtn = e.target.closest(".complete-btn");
     
-    /* SAVE REMARK */
     if (saveBtn) {
       const id = saveBtn.dataset.id;
       const remark = document
@@ -113,8 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Remark saved");
     }
     
-    /* MARK COMPLETED (DB ONLY) */
-    /* MARK COMPLETED */
     if (completeBtn) {
       const id = completeBtn.dataset.id;
       if (!confirm("Mark work as completed and start completion voting?")) return;
@@ -123,11 +118,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const voting = await getVotingContract();
       
       try {
-        // 1️⃣ START COMPLETION VOTING ON-CHAIN
+
         const tx = await voting.startCompletionVoting(chainProblemId);
         await tx.wait();
         
-        // 2️⃣ UPDATE DATABASE (UI STATE)
+
         await supabase
         .from("problems")
         .update({
@@ -147,7 +142,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     
   });
   
-  /* ---------------- LOGOUT ---------------- */
   document.getElementById("topbar").addEventListener("click", async () => {
     console.log("Logout clicked")
     await supabase.auth.signOut();

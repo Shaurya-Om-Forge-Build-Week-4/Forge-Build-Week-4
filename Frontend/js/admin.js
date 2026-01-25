@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
       
-      // ❗ Reset all to Draft first
       for (const p of byLocality[locality]) {
         await supabase.from("problems").update({
           status: "Draft",
@@ -68,14 +67,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       
       if (!winner) continue;
       
-      // ✅ Promote winner
       await supabase.from("problems").update({
         status: "Under Progress",
         status_code: 2,
         assigned: true
       }).eq("id", winner.id);
       
-      // ✅ Fetch contractor
       const { data: contractor, error } = await supabase
       .from("profiles")
       .select("wallet")
@@ -139,9 +136,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   
   
-  
-  
-  /* ---------- AUTH ---------- */
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {
     alert("Login required");
@@ -182,7 +176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!act) return;
       
       try {
-        /* REGISTER */
+
         if (act === "register") {
           const tx = await voting.vote(chainId, 1);
           await tx.wait();
@@ -196,7 +190,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           location.reload();
         }
         
-        /* CLOSE INITIAL */
         if (act === "closeInitial") {
           const tx = await voting.moveToUnderProgress(chainId);
           await tx.wait();
@@ -210,7 +203,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           location.reload();
         }
         
-        /* CLOSE COMPLETION */
         if (act === "closeCompletion") {
           const tx = await voting.closeCompletionVoting(chainId);
           await tx.wait();

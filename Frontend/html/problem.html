@@ -5,11 +5,7 @@
     <title>Problem Details</title>
     
     <link rel="stylesheet" href="../css/problem.css" />
-    
-    <!-- Supabase SDK -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
-    <!-- Supabase Client Init -->
     <script>
         const SUPABASE_URL = "https://boocborspzmgivjqrahr.supabase.co";
         const SUPABASE_ANON_KEY = "sb_publishable_LB3wTXMuOHWjK8n5tGA6LQ_pnWwplGP";
@@ -47,8 +43,16 @@
             <p id="completionStats"></p>
         </div>
         
+        <div id="txInfo" hidden>
+            <p>
+                Transaction submitted:
+                <a id="txLink" target="_blank"></a>
+            </p>
+        </div>
         
-        <!-- INITIAL VOTING -->
+        
+        
+        
         <div id="votingSection" hidden>
             <h3>Cast Vote (Quadratic Voting)</h3>
             

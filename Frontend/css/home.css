@@ -1,20 +1,7 @@
-/* ================================================================================
-   CIVIC ACCOUNTABILITY DASHBOARD - PREMIUM CSS
-   Streamlined with Reduced Animations, Full Hover Effects & Shadows Preserved
-   Blue-Grey-White Contrasting Theme
-   ================================================================================ */
-
-/* ================================================================================
-   SECTION 1: FONT IMPORTS
-   ================================================================================ */
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
-
-/* ================================================================================
-   SECTION 2: RESET & BASE
-   ================================================================================ */
 
 *,
 *::before,
@@ -56,10 +43,6 @@ button {
   font-family: inherit;
   cursor: pointer;
 }
-
-/* ================================================================================
-   SECTION 3: CSS VARIABLES
-   ================================================================================ */
 
 :root {
   /* Blue Scale */
@@ -164,9 +147,6 @@ button {
   --z-modal: 1050;
 }
 
-/* ================================================================================
-   SECTION 4: BODY & BACKGROUND
-   ================================================================================ */
 
 body {
   font-family: "Inter", sans-serif;

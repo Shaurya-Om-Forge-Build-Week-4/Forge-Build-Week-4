@@ -5,14 +5,10 @@
   <title>Home | Civic Accountability</title>
 
   <link rel="stylesheet" href="../css/home.css" />
-
-  <!-- Supabase SDK -->
   <script src="https://unpkg.com/@supabase/supabase-js@2" defer></script>
 </head>
 
 <body>
-
-  <!-- ================= HEADER ================= -->
   <header class="app-header">
     <div class="header-left">
       <h1>Civic Dashboard</h1>
@@ -24,10 +20,8 @@
     </div>
   </header>
 
-  <!-- ================= MAIN ================= -->
   <main class="main-container">
 
-    <!-- USER INFO -->
     <section class="user-card">
       <div id="user-info">Loading user info…</div>
 
@@ -36,18 +30,14 @@
       </button>
     </section>
 
-    <!-- PROBLEMS -->
     <section class="problems-section">
       <h2>Active Problems</h2>
 
       <div id="cards-container" class="cards-grid">
-        <!-- Cards injected by JS -->
       </div>
     </section>
 
   </main>
-
-  <!-- ================= SCRIPTS ================= -->
   <script type="module" src="../js/supabaseClient.js"></script>
   <script type="module" src="../js/home.js"></script>
 

@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       message.textContent = "Creating account...";
 
-      // 1️⃣ Supabase signup
       const { data, error } = await supabase.auth.signUp({
         email,
         password
@@ -35,14 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const user = data.user;
       if (!user) throw new Error("Signup failed");
 
-      // 2️⃣ Insert profile
       const { error: profileError } = await supabase
         .from("profiles")
         .insert({
           id: user.id,
           full_name,
           locality,
-          credits: 100,          // initial credits
+          credits: 100,
           isContractor: userType === "contractor"
         });
 

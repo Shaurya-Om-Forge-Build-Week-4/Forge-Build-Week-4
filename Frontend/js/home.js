@@ -1,9 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   
-  // ==========================
-  // 1️⃣ Session Check (Protected Page)
-  // ==========================
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -13,9 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
   
-  // ==========================
-  // 2️⃣ Fetch User Profile
-  // ==========================
   const userId = session.user.id;
   
   const { data: profile, error: profileError } = await supabase
@@ -34,9 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const userLocality = profile.locality;
   const isContractor = profile.isContractor === true;
   
-  // ==========================
-  // 3️⃣ Render User Info
-  // ==========================
+
   document.getElementById("user-info").innerHTML = `
     <strong>Name:</strong> ${profile.full_name}<br/>
     <strong>Locality:</strong> ${userLocality}<br/>
@@ -44,27 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     <strong>Role:</strong> ${isContractor ? "Contractor" : "Resident"}
   `;
   
-  // ==========================
-  // 4️⃣ Contractor Dashboard Button
-  // ==========================
-  // if (isContractor) {
-  //   const contractorBtn = document.getElementById("contractor-btn");
-  //   contractorBtn.style.display = "block";
-  
-  //   contractorBtn.addEventListener("click", () => {
-    //     window.location.href = "../html/signup.html";
-  //   });
-  // }
-  
-  // ==========================
-  // 5️⃣ Load Problems (LOCALITY-RESTRICTED)
-  // ==========================
   console.log("USER LOCALITY:", profile.locality);
   await loadProblemCardsForLocality(userLocality);
   
-  // ==========================
-  // 6️⃣ Logout
-  // ==========================
   document.getElementById("logout").addEventListener("click", async () => {
     await supabase.auth.signOut();
     
@@ -74,17 +48,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-
-// ===================================================
-// Fetch & render problems ONLY from user's locality
-// ===================================================
 async function loadProblemCardsForLocality(userLocality) {
   const supabase = window.supabaseClient;
   const container = document.getElementById("cards-container");
   
   container.innerHTML = "Loading problems...";
   
-  // 🔐 HARD LOCALITY FILTER
   const { data, error } = await supabase
   .from("problems")
   .select("id, title, description, image_url, status, locality, status_code")

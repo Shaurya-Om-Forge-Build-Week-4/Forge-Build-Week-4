@@ -1,0 +1,192 @@
+/* ============================
+   ADMIN PANEL – PROFESSIONAL UI
+   ============================ */
+
+:root {
+  --bg-main: #f4f6fb;
+  --bg-card: #ffffff;
+  --bg-header: #0f172a;
+  --accent: #2563eb;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --success: #16a34a;
+
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 10px;
+  --shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Outfit", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* ============================
+   HEADER
+   ============================ */
+
+h1 {
+  background: var(--bg-header);
+  color: white;
+  padding: 20px 30px;
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* ============================
+   LAYOUT
+   ============================ */
+
+body > button,
+body > #problems {
+  margin: 20px 30px;
+}
+
+/* ============================
+   GLOBAL ACTION BAR
+   ============================ */
+
+body > button {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: all 0.2s ease;
+}
+
+#startAll {
+  background: var(--accent);
+  color: white;
+}
+
+#closeAll {
+  background: var(--warning);
+  color: white;
+}
+
+#resetAll {
+  background: var(--danger);
+  color: white;
+}
+
+body > button:hover {
+  transform: translateY(-1px);
+  opacity: 0.95;
+}
+
+/* ============================
+   PROBLEM GRID
+   ============================ */
+
+#problems {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+/* ============================
+   PROBLEM CARD
+   ============================ */
+
+.problem {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.problem h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.problem p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ============================
+   STATUS BADGES
+   ============================ */
+
+.problem p strong {
+  color: var(--text-main);
+}
+
+.problem[data-status="Initial Voting"] {
+  border-left: 4px solid var(--accent);
+}
+
+.problem[data-status="Under Progress"] {
+  border-left: 4px solid var(--warning);
+}
+
+.problem[data-status="Completion Voting"] {
+  border-left: 4px solid var(--success);
+}
+
+.problem[data-status="Completed"] {
+  border-left: 4px solid var(--success);
+  opacity: 0.85;
+}
+
+.problem[data-status="Failed"] {
+  border-left: 4px solid var(--danger);
+  opacity: 0.85;
+}
+
+/* ============================
+   CARD ACTION BUTTONS
+   ============================ */
+
+.problem button {
+  align-self: flex-start;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: white;
+  transition: all 0.15s ease;
+}
+
+.problem button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+
+@media (max-width: 600px) {
+  body > button {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  #problems {
+    grid-template-columns: 1fr;
+  }
+}

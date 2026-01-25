@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let credits = await voting.credits(userAddress);
     const [yes, no] = await voting.getCompletionVotes(chainProblemId);
     
-    // UX fix for first-time users
+    
     if (credits.toString() === "0") {
       credits = 100;
     }
@@ -87,49 +87,89 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ---------------- INITIAL VOTING ---------------- */
   if (p.status_code === 1) {
     const section = document.getElementById("votingSection");
-    section.hidden = false;
     
-    const voteInput = document.getElementById("voteInput");
-    const costPreview = document.getElementById("voteCostPreview");
+    const myVotes = Number(
+      await voting.getUserVotes(userAddress, chainProblemId)
+    );
     
-    voteInput.addEventListener("input", () => {
-      const v = Number(voteInput.value);
-      costPreview.innerText =
-      v > 0 ? `Cost: ${v*(v+1)*(2*v+1)/6} credits` : "";
-    });
-    
-    document.getElementById("voteBtn").onclick = async () => {
-      const votes = Number(voteInput.value);
-      if (votes <= 0) return alert("Invalid votes");
+    if (myVotes > 0) {
+      section.hidden = true;
       
-      try {
-        await castVote(chainProblemId, votes);
-        await refreshStats();
-        voteInput.value = "";
-        costPreview.innerText = "";
-        alert("Vote recorded on blockchain");
-      } catch (err) {
-        console.error(err);
-        alert("Transaction failed");
-      }
-    };
+    } else {
+      section.hidden = false;
+      
+      const voteInput = document.getElementById("voteInput");
+      const costPreview = document.getElementById("voteCostPreview");
+      
+      voteInput.addEventListener("input", () => {
+        const v = Number(voteInput.value);
+        costPreview.innerText =
+        v > 0 ? `Cost: ${v * (v+1)*(2*v+1)/6} credits` : "";
+      });
+      
+      document.getElementById("voteBtn").onclick = async () => {
+        const votes = Number(voteInput.value);
+        if (votes <= 0) return alert("Invalid votes");
+        
+        try {
+          const tx = await castVote(chainProblemId, votes);
+          
+          const txInfo = document.getElementById("txInfo");
+          const txLink = document.getElementById("txLink");
+          
+          txLink.href = `https://sepolia.etherscan.io/tx/${tx.hash}`;
+          txLink.innerText = tx.hash;
+          txInfo.hidden = false;
+          await refreshStats();
+          
+          section.hidden = true;
+          
+          alert("Vote recorded");
+        } catch (err) {
+          console.error(err);
+          alert("Transaction failed");
+        }
+      };
+    }
   }
+  
   
   /* ---------------- COMPLETION VOTING ---------------- */
   if (p.status_code === 3) {
     const section = document.getElementById("completionVoting");
-    section.hidden = false;
     
-    document.getElementById("yesBtn").onclick = async () => {
-      await voteCompletion(chainProblemId, true);
-      await refreshStats();
-      alert("Vote recorded");
-    };
+    const hasVoted = await voting.completionVoted(
+      chainProblemId,
+      userAddress
+    );
     
-    document.getElementById("noBtn").onclick = async () => {
-      await voteCompletion(chainProblemId, false);
-      await refreshStats();
-      alert("Vote recorded");
-    };
+    if (hasVoted) {
+      section.hidden = true;
+      document.getElementById("alreadyCompletionVotedMsg").hidden = false;
+    } else {
+      section.hidden = false;
+      
+      document.getElementById("yesBtn").onclick = async () => {
+        const tx = await voteCompletion(chainProblemId, true);
+        
+        showTx(tx.hash);
+        await refreshStats();
+        
+        section.hidden = true;
+        document.getElementById("alreadyCompletionVotedMsg").hidden = false;
+      };
+      
+      document.getElementById("noBtn").onclick = async () => {
+        const tx = await voteCompletion(chainProblemId, false);
+        
+        showTx(tx.hash);
+        await refreshStats();
+        
+        section.hidden = true;
+        document.getElementById("alreadyCompletionVotedMsg").hidden = false;
+      };
+      
+    }
   }
+  
 });
