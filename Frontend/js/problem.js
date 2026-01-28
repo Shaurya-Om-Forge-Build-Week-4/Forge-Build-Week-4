@@ -13,6 +13,16 @@ function toChainId(uuid) {
   );
 }
 
+function showTx(hash) {
+  const txInfo = document.getElementById("txInfo");
+  const txLink = document.getElementById("txLink");
+
+  txLink.href = `https://sepolia.etherscan.io/tx/${hash}`;
+  txLink.innerText = hash;
+  txInfo.hidden = false;
+}
+
+
 async function loadEscrowTransactions(chainProblemId) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 

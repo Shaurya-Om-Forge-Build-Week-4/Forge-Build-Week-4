@@ -97,15 +97,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         signer
       );
       
-      await voting.moveToUnderProgress(toChainId(p.id));
-      await treasury.createEscrow(
-        toChainId(winner.id),
-        contractor.wallet,
-        {
-          value: ethers.utils.parseEther("0.0002")
-
-        }
-      );
+      const phase = await voting.getPhase(toChainId(winner.id));
+      if (phase === 0) {
+        await voting.moveToUnderProgress(toChainId(winner.id));
+      }
+      
+      const escrow = await treasury.escrows(toChainId(winner.id));
+      if (!escrow.exists) {
+        await treasury.createEscrow(
+          toChainId(winner.id),
+          contractor.wallet,
+          {
+            value: ethers.utils.parseEther("0.0002")
+          }
+        );
+      } else {
+        console.warn("Escrow already exists for", winner.id);
+      }
+      
       
       await supabase.from("problems").update({
         advance_paid: winner.cost * 0.5,
@@ -177,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!act) return;
       
       try {
-
+        
         if (act === "register") {
           const tx = await voting.vote(chainId, 1);
           await tx.wait();
