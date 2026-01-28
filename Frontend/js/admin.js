@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         signer
       );
       
+      await voting.moveToUnderProgress(toChainId(p.id));
       await treasury.createEscrow(
         toChainId(winner.id),
         contractor.wallet,

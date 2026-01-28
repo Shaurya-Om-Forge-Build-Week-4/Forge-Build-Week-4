@@ -10,7 +10,7 @@ function toChainId(uuid) {
 document.addEventListener("DOMContentLoaded", async () => {
   const supabase = window.supabaseClient;
   const container = document.getElementById("problemsContainer");
-    
+  
   const {
     data: { session }
   } = await supabase.auth.getSession();
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.location.href = "../html/home.html";
     return;
   }
-
+  
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const bal = await provider.getBalance(profile.wallet);
   document.getElementById("balance").innerText =
@@ -41,13 +41,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("localityBadge").innerText =
     `Locality: ${profile.locality}`;
   
-
+  
   const { data: problems } = await supabase
   .from("problems")
   .select("*")
   .eq("locality", profile.locality)
-  .eq("status_code", 2)
-  .order("status_code");
+  .eq("assigned", true)
+  .in("status_code", [2, 3, 4, 5]);
+  
+  
+  const totalIssues = problems.length;
+  
+  const inProgress = problems.filter(
+    p => p.status_code === 2 || p.status_code === 3
+  ).length;
+  
+  const completed = problems.filter(
+    p => p.status_code === 4
+  ).length;
+  
+  document.getElementById("statTotal").innerText = totalIssues;
+  document.getElementById("statProgress").innerText = inProgress;
+  document.getElementById("statCompleted").innerText = completed;
+  
   
   if (!problems || problems.length === 0) {
     container.innerHTML = "<p>No assigned problems.</p>";
@@ -56,7 +72,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   container.innerHTML = "";
   
-  problems.forEach((p) => {
+  const ordered = [
+    ...problems.filter(p => p.status_code === 2),
+    ...problems.filter(p => p.status_code !== 2)
+  ];
+  
+  ordered.forEach((p) => {
     const card = document.createElement("div");
     card.className = "problem-card";
     
@@ -89,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     container.appendChild(card);
   });
   
-
+  
   container.addEventListener("click", async (e) => {
     const saveBtn = e.target.closest(".save-btn");
     const completeBtn = e.target.closest(".complete-btn");
@@ -118,11 +139,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       const voting = await getVotingContract();
       
       try {
-
+        
+        const phase = await voting.getPhase(chainProblemId);
+        console.log("On-chain phase:", phase);
         const tx = await voting.startCompletionVoting(chainProblemId);
         await tx.wait();
         
-
+        
         await supabase
         .from("problems")
         .update({
@@ -142,12 +165,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     
   });
   
-  document.getElementById("topbar").addEventListener("click", async () => {
-    console.log("Logout clicked")
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
     await supabase.auth.signOut();
-
-    setTimeout(() => {
-      window.location.href = "../html/index.html";
-    }, 100);
+    window.location.href = "../html/index.html";
   });
+  
 });

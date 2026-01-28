@@ -1,4 +1,7 @@
 const TreasuryABI = [
+  // =====================
+  // Constructor
+  // =====================
   {
     "inputs": [
       {
@@ -16,86 +19,17 @@ const TreasuryABI = [
     "type": "constructor"
   },
 
+  // =====================
+  // Receive ETH
+  // =====================
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "id",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "contractor",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "EscrowCreated",
-    "type": "event"
+    "stateMutability": "payable",
+    "type": "receive"
   },
 
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "id",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "AdvanceReleased",
-    "type": "event"
-  },
-
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "id",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "FinalReleased",
-    "type": "event"
-  },
-
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes32",
-        "name": "id",
-        "type": "bytes32"
-      }
-    ],
-    "name": "EscrowFailed",
-    "type": "event"
-  },
-
+  // =====================
+  // Public Variables
+  // =====================
   {
     "inputs": [],
     "name": "government",
@@ -109,7 +43,6 @@ const TreasuryABI = [
     "stateMutability": "view",
     "type": "function"
   },
-
   {
     "inputs": [],
     "name": "voting",
@@ -124,11 +57,14 @@ const TreasuryABI = [
     "type": "function"
   },
 
+  // =====================
+  // Escrow Mapping Getter
+  // =====================
   {
     "inputs": [
       {
         "internalType": "bytes32",
-        "name": "id",
+        "name": "",
         "type": "bytes32"
       }
     ],
@@ -159,6 +95,9 @@ const TreasuryABI = [
     "type": "function"
   },
 
+  // =====================
+  // Core Functions
+  // =====================
   {
     "inputs": [
       {
@@ -177,7 +116,6 @@ const TreasuryABI = [
     "stateMutability": "payable",
     "type": "function"
   },
-
   {
     "inputs": [
       {
@@ -192,9 +130,84 @@ const TreasuryABI = [
     "type": "function"
   },
 
+  // =====================
+  // Events (Indexed)
+  // =====================
   {
-    "stateMutability": "payable",
-    "type": "receive"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "contractor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EscrowCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "AdvanceReleased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "FinalReleased",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "id",
+        "type": "bytes32"
+      }
+    ],
+    "name": "EscrowFailed",
+    "type": "event"
   }
 ];
 

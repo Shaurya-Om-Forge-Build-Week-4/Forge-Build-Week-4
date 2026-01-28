@@ -2,11 +2,73 @@ import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.es
 import { castVote } from "../js/vote.js";
 import { voteCompletion } from "../js/completionVote.js";
 import { getVotingContract } from "../js/blockchain.js";
+import { TREASURY_ADDRESS } from "../js/config.js";
+import treasuryABI from "../js/TreasuryABI.js";
+
+const TREASURY_DEPLOY_BLOCK =  10133869;
 
 function toChainId(uuid) {
   return ethers.utils.keccak256(
     ethers.utils.toUtf8Bytes(uuid)
   );
+}
+
+async function loadEscrowTransactions(chainProblemId) {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+  const treasury = new ethers.Contract(
+    TREASURY_ADDRESS,
+    treasuryABI,
+    provider
+  );
+
+  return {
+    created: await treasury.queryFilter(
+      treasury.filters.EscrowCreated(chainProblemId),
+      TREASURY_DEPLOY_BLOCK
+    ),
+    advances: await treasury.queryFilter(
+      treasury.filters.AdvanceReleased(chainProblemId),
+      TREASURY_DEPLOY_BLOCK
+    ),
+    finals: await treasury.queryFilter(
+      treasury.filters.FinalReleased(chainProblemId),
+      TREASURY_DEPLOY_BLOCK
+    ),
+    failed: await treasury.queryFilter(
+      treasury.filters.EscrowFailed(chainProblemId),
+      TREASURY_DEPLOY_BLOCK
+    )
+  };
+}
+
+async function renderEscrowTxs(chainProblemId) {
+  const list = document.getElementById("escrowTxList");
+  list.innerHTML = "";
+
+  const { created, advances, finals, failed } =
+    await loadEscrowTransactions(chainProblemId);
+
+  function addTx(label, e) {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <strong>${label}</strong>:
+      <a href="https://sepolia.etherscan.io/tx/${e.transactionHash}"
+         target="_blank">
+         ${e.transactionHash}
+      </a>
+    `;
+    list.appendChild(li);
+  }
+
+  created.forEach(e => addTx("Escrow Created", e));
+  advances.forEach(e => addTx("Advance Paid", e));
+  finals.forEach(e => addTx("Final Payment", e));
+  failed.forEach(e => addTx("Escrow Failed", e));
+
+  if (!list.children.length) {
+    list.innerHTML = "<li>No contractor payments yet</li>";
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -116,6 +178,8 @@ document.addEventListener("DOMContentLoaded", async () => {
           
           const txInfo = document.getElementById("txInfo");
           const txLink = document.getElementById("txLink");
+
+          alert("Vote recorded");
           
           txLink.href = `https://sepolia.etherscan.io/tx/${tx.hash}`;
           txLink.innerText = tx.hash;
@@ -123,8 +187,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           await refreshStats();
           
           section.hidden = true;
-          
-          alert("Vote recorded");
         } catch (err) {
           console.error(err);
           alert("Transaction failed");
@@ -171,5 +233,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       
     }
   }
+
+  await renderEscrowTxs(chainProblemId);
   
 });
