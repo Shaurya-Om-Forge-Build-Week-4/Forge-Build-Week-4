@@ -46,7 +46,7 @@ This removes blind trust and reduces misuse of funds.
 
 ---
 
-![Decsion Path Flow Chart]("DecisionPath.png")
+![Decision Path Flow Chart](DecisionPath.png)
 
 
 ## Voting System

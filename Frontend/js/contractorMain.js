@@ -141,10 +141,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         
         const phase = await voting.getPhase(chainProblemId);
-        console.log("On-chain phase:", phase);
+        
+        if (phase !== 1) {
+          alert("Cannot start completion voting. On-chain phase is not Under Progress.");
+          return;
+        }
+        
         const tx = await voting.startCompletionVoting(chainProblemId);
         await tx.wait();
-        
         
         await supabase
         .from("problems")

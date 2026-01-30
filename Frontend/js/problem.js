@@ -13,16 +13,6 @@ function toChainId(uuid) {
   );
 }
 
-function showTx(hash) {
-  const txInfo = document.getElementById("txInfo");
-  const txLink = document.getElementById("txLink");
-
-  txLink.href = `https://sepolia.etherscan.io/tx/${hash}`;
-  txLink.innerText = hash;
-  txInfo.hidden = false;
-}
-
-
 async function loadEscrowTransactions(chainProblemId) {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -176,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       voteInput.addEventListener("input", () => {
         const v = Number(voteInput.value);
         costPreview.innerText =
-        v > 0 ? `Cost: ${v * (v+1)*(2*v+1)/6} credits` : "";
+        v > 0 ? `Cost: ${v *v} credits` : "";
       });
       
       document.getElementById("voteBtn").onclick = async () => {
