@@ -22,6 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    window.location.href = "../html/index.html";
+    window.location.href = "../index.html";
   });
 });

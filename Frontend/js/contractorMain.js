@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   document.getElementById("logoutBtn").addEventListener("click", async () => {
     await supabase.auth.signOut();
-    window.location.href = "../html/index.html";
+    window.location.href = "../index.html";
   });
   
 });

@@ -16,9 +16,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       .single();
 
     if (!profile.isContractor) {
-      window.location.href = "../html/home.html";
+      window.location.href = "html/home.html";
     } else if (profile.isContractor) {
-      window.location.href = "../html/contractor.html";
+      window.location.href = "html/contractor.html";
     }
 
   } catch (err) {

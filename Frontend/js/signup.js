@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
       message.style.color = "green";
 
       setTimeout(() => {
-        window.location.href = "../html/index.html";
+        window.location.href = "../index.html";
       }, 1000);
 
     } catch (err) {
